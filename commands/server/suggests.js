@@ -4,6 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "suggests",
     run: async(client,message,args,pr,errorNull,errorPermissions) => {
+
         if(!message.member.hasPermission("MANAGE_GUILD"))
             return message.channel.send(errorPermissions("ZARZĄDZANIE SERWEREM","MANAGE_SERVER"))
         if(!(args[0] == "disable" || args[0] == "enable"))
