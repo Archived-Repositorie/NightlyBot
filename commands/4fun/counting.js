@@ -7,9 +7,9 @@ module.exports = {
         const channel = message.mentions.channels.first()
         if(!message.member.hasPermission("MANAGE_CHANNELS"))
             return message.channel.send(errorPermissions("ZARZĄDZANIE KANAŁAMI","MANAGE_CHANNELS"))
-        if(!(args[0] == "disable" || args[0] == "enable"))
+        if(!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
             return message.channel.send(errorNull("counting", "<disable/enable>"))
-        if(args[0] == "disable") {
+        if((args[0] || " ").toLowerCase() == "disable") {
             db.set(`${message.guild.id}_switch_counting`,0)
             const embed = new Discord.MessageEmbed()
                 .setTitle("Wyłączono liczenie!")

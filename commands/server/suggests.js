@@ -7,10 +7,10 @@ module.exports = {
 
         if(!message.member.hasPermission("MANAGE_GUILD"))
             return message.channel.send(errorPermissions("ZARZĄDZANIE SERWEREM","MANAGE_SERVER"))
-        if(!(args[0] == "disable" || args[0] == "enable"))
+        if(!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
             return message.channel.send(errorNull("suggests", "<disable/enable>"))
         const channel = message.mentions.channels.first()
-        if(args[0] == "disable") {
+        if((args[0] || " ").toLowerCase() == "disable") {
             db.set(`${message.guild.id}_switch_join`,0)
             const embed = new Discord.MessageEmbed()
                 .setTitle("Wyłączono propozycje na serwerze!")

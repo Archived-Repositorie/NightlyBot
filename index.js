@@ -36,6 +36,13 @@ const errorNull = function (command,arguments) {
         .setColor("RED")
     return embed
 }
+const errorBotPermissions = function (polish,english) {
+    const embed = new Discord.MessageEmbed()
+        .setTitle("Nie posiadam permisji!")
+        .setDescription(`Aby użyć komendy musę posiadać permisje \`${polish}(${english})\``)
+        .setColor("RED")
+    return embed
+}
 
 function tags(text,member) {
     return text
@@ -70,7 +77,7 @@ client.on("message", async message => {
     let command = client.commands.get(cmd)
     if (!command) command = client.commands.get(client.aliases.get(cmd))
     if (command)
-        command.run(client, message, args,prefix,errorNull,errorPermissions,tags)
+        command.run(client, message, args,prefix,errorNull,errorPermissions,tags,errorBotPermissions)
 })
 
 client.login(config.token)
@@ -118,6 +125,13 @@ try {
             return msg.author.send(`${msg.author}, Podałeś złą liczbe!`)
         }
         db.set(`${msg.guild.id}_number`, nextNumber)
+    })
+
+    client.on("channelCreate", channel => {
+        let role = db.get(`${channel.guild.id}_muted`) || {id: undefined}
+        role = channel.guild.roles.cache.get(role.id)
+        if(!role) return;
+        channel.updateOverwrite(role, { SEND_MESSAGES: false })
     })
 } catch (err) {
     console.log(err)

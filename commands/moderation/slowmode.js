@@ -1,9 +1,18 @@
 const Discord = require("discord.js")
+function timee(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
 
+    var hDisplay = h > 0 ? h + (h == 1 ? " godzine" : " godzin") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minut") : "";
+    var sDisplay = s > 0 ? s + (s == 1 ? " sekunde" : " sekund") : "";
+    return hDisplay + mDisplay + sDisplay;
+}
 module.exports = {
     name: "slowmode",
-    run: async(client,message,args,pr,errorNull,errorPermissions) => {
-        try {
+    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
             const time = {
                 "s": 1,
                 "sec": 1,
@@ -18,16 +27,18 @@ module.exports = {
             const channel = message.mentions.channels.first() || message.channel
             if (!message.member.hasPermission("MANAGE_CHANNELS"))
                 return message.channel.send(errorPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
-            if (!(args[0] == "disable" || args[0] == "enable"))
+        if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
+            return message.channel.send(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
+            if (!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
                 return message.channel.send(errorNull("slowmode", "<disable/enable>"))
-            if (args[0] == "disable") {
+            if ((args[0] || " ").toLowerCase() == "disable") {
                 message.channel.setRateLimitPerUser(0)
                 const embed = new Discord.MessageEmbed()
                     .setTitle("Wyłączono slowmode!")
                     .setColor("DARK_PURPLE")
                 return message.channel.send(embed)
             }
-            const timedText = args[1] || " "
+            const timedText = (args[1] || " ").toLowerCase() || " "
 
             const number = Math.floor(timedText.replace(/(^\d+)(.+$)/i, '$1'))
             const timeType = timedText.replace(/[^a-zA-Z]+/g, '') || NaN
@@ -43,11 +54,8 @@ module.exports = {
             const embed = new Discord.MessageEmbed()
                 .setColor("DARK_PURPLE")
                 .setTitle("Gotowe!")
-                .setDescription(`Slowmode ustawiono na ${number + timeType}`)
+                .setDescription(`Slowmode ustawiono na ${timee(timeParsed)}`)
             message.channel.send(embed)
             channel.setRateLimitPerUser(timeParsed)
-        } catch (err) {
-            console.log(err)
-        }
     }
 }

@@ -23,7 +23,7 @@ module.exports = {
             const embed = new Discord.MessageEmbed()
                 .setColor("DARK_PURPLE")
                 .setImage(randomValue.file_url)
-                .setTitle(args[0])
+                .setTitle((args[0] || " ").toLowerCase())
                 .setURL(randomValue.file_url)
             message.channel.send(embed)
         }catch(err) {
