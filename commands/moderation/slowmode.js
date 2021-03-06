@@ -27,8 +27,8 @@ module.exports = {
             const channel = message.mentions.channels.first() || message.channel
             if (!message.member.hasPermission("MANAGE_CHANNELS"))
                 return message.channel.send(errorPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
-        if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
-            return message.channel.send(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
+            if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
+                return message.channel.send(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
             if (!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
                 return message.channel.send(errorNull("slowmode", "<disable/enable>"))
             if ((args[0] || " ").toLowerCase() == "disable") {

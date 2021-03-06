@@ -2,6 +2,7 @@ const Discord = require("discord.js")
 const config = require("./config.json")
 const db = require("quick.db")
 const fs = require('fs')
+const sleep = t => new Promise(r => setTimeout(r, t))
 
 const client = new Discord.Client()
 
@@ -10,7 +11,6 @@ const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric
 client.commands = new Discord.Collection()
 client.aliases = new Discord.Collection()
 client.categories = fs.readdirSync("./commands/");
-
 ["command"].forEach(handler => {
     fs.readdirSync("./commands/").forEach(dir => {
         const commands = fs.readdirSync(`./commands/${dir}/`).filter(file => file.endsWith(".js"))
@@ -83,7 +83,34 @@ client.on("message", async message => {
 client.login(config.token)
 
 try {
-
+    client.on("guildMemberAdd", async member => {
+        const obj = {
+            muted: {
+                time: {
+                    date: undefined,
+                    sec: undefined
+                },
+                check: undefined
+            }
+        }
+        const { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
+        if(!muted.check) return;
+        const roleId = db.get(`${member.guild.id}_muted`) || {id: undefined}
+        const role = member.guild.roles.cache.get(roleId.id)
+        if(!role) return;
+        if(!muted.time.sec)
+            return member.roles.add(role)
+        const dateNow = new Date().getTime() //czas teraz
+        const dateMute = muted.time.date //czas wykonania mute
+        const timeDiff = Math.abs(dateMute - dateNow)  //czas w którym użytkownika nie było na serwerze + czas mute przed wyjściem
+        const timeDiffInSecond = Math.ceil(timeDiff / 1000) //zamienia w sekundy
+        const allOfTime = muted.time.sec - timeDiffInSecond //oblicza ile musi trwać jeszcze mute, muted.time.sec(czas trwania mute) - timeDiffInSecound(czas w którym użytwkonika nie było na serwerze + czas mute przed wyjście)
+        if(!allOfTime || allOfTime <= 0)
+            return member.roles.remove(role)
+        member.roles.add(role)
+        await sleep(allOfTime * 1000)
+        member.roles.remove(role)
+    })
     client.on("ready", () => {
         console.log(` Zalogowano jako ${client.user.tag}\n`,
             `Serwery: ${client.guilds.cache.size}\n`,
@@ -105,13 +132,6 @@ try {
         member.guild.channels.cache.get(joined.id).send(text)
     })
 
-    client.on("guildMemberRemove", member => {
-        const switched = db.get(`${member.guild.id}_switch_leave`)
-        if (switched != 1) return;
-        const joined = db.get(`${member.guild.id}_leave`)
-        const text = tags(joined.text, member)
-        member.guild.channels.cache.get(joined.id).send(text)
-    })
 
     client.on("message", msg => {
         if (!msg.guild) return;
@@ -128,6 +148,7 @@ try {
     })
 
     client.on("channelCreate", channel => {
+		if(!channel.guild) return;
         let role = db.get(`${channel.guild.id}_muted`) || {id: undefined}
         role = channel.guild.roles.cache.get(role.id)
         if(!role) return;
