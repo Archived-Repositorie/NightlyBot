@@ -1,15 +1,15 @@
-const Discord = require("discord.js")
+const {Client, Collection, MessageEmbed} = require("discord.js")
 const config = require("./config.json")
 const db = require("quick.db")
 const fs = require('fs')
 const sleep = t => new Promise(r => setTimeout(r, t))
 
-const client = new Discord.Client()
+const client = new Client()
 
 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
 
-client.commands = new Discord.Collection()
-client.aliases = new Discord.Collection()
+client.commands = new Collection()
+client.aliases = new Collection()
 client.categories = fs.readdirSync("./commands/");
 ["command"].forEach(handler => {
     fs.readdirSync("./commands/").forEach(dir => {
@@ -23,21 +23,21 @@ client.categories = fs.readdirSync("./commands/");
 })
 
 const errorPermissions = function (polish,english) {
-    const embed = new Discord.MessageEmbed()
+    const embed = new MessageEmbed()
         .setTitle("Nie posiadasz permisji!")
         .setDescription(`Aby użyć komendy musisz posiadać permisje \`${polish}(${english})\``)
         .setColor("RED")
     return embed
 }
 const errorNull = function (command,arguments) {
-    const embed = new Discord.MessageEmbed()
+    const embed = new MessageEmbed()
         .setTitle("Użyj poprawnie komendy!")
         .setDescription(`Użyj \`${command} ${arguments}\``)
         .setColor("RED")
     return embed
 }
 const errorBotPermissions = function (polish,english) {
-    const embed = new Discord.MessageEmbed()
+    const embed = new MessageEmbed()
         .setTitle("Nie posiadam permisji!")
         .setDescription(`Aby użyć komendy musę posiadać permisje \`${polish}(${english})\``)
         .setColor("RED")

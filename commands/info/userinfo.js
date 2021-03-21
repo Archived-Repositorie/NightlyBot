@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "userinfo",
@@ -7,7 +7,7 @@ module.exports = {
         const member = message.mentions.members.first() || message.member
         let bot = ""
         if(member.user.bot) bot = "🤖"
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setDescription(`${member} ${bot}`)
             .setThumbnail(member.user.avatarURL())

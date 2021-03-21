@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 const db = require("quick.db")
 
 const sleep = t => new Promise(r => setTimeout(r, t))
@@ -47,14 +47,14 @@ module.exports = {
         const roleId = db.get(`${message.guild.id}_muted`) || {id: undefined}
         const role = message.guild.roles.cache.get(roleId.id)
         if(!role) {
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Rola nie istnieje!")
                 .setDescription("Aby stworzyć role użyj komendy `muted create` lub `muted set-role`")
                 .setColor("RED")
             return message.channel.send(embed)
         }
         if(role.position >= message.guild.me.roles.cache.first().size) {
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Rola nie można nadać!")
                 .setDescription("Role którą chcesz wyciszyć jest na tej samej pozycji co moja lub większa")
                 .setColor("RED")
@@ -64,21 +64,21 @@ module.exports = {
             return message.channel.send(errorNull("tempmute", "<member>"))
         const mutedMember = { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
         if(mutedMember.check) {
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Użytkownik jest już wyciszony!")
                 .setDescription("Odcisz użytkownika aby nadać znowu wyciszenie")
                 .setColor("RED")
             return message.channel.send(embed)
         }
         if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyciszyć")
                 .setColor("RED")
             return message.channel.send(embed)
         }
         if(member.hasPermission("ADMINISTRATOR")) {
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
@@ -101,7 +101,7 @@ module.exports = {
                 check: true
             }
         })
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
             .setTitle("Gotowe!")
             .setDescription("Użytkownik został wyciszony")

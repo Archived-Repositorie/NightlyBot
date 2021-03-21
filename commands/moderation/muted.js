@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 const db = require("quick.db")
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
             case "create": //option create
                 role = db.get(`${message.guild.id}_muted`) || {id: undefined}
                 if(message.guild.roles.cache.get(role.id)) {
-                    const embed = new Discord.MessageEmbed()
+                    const embed = new MessageEmbed()
                         .setTitle("Taka rola już istnieje!")
                         .setDescription("Jeśli rola nie blokuje wysyłania wiadomość wpisz komende `muted reload-role` lub zmniejsz permisje użytkownika")
                         .setColor("RED")
@@ -36,7 +36,7 @@ module.exports = {
                 db.set(`${message.guild.id}_muted`, {
                     id: role.id
                 })
-                const embed = new Discord.MessageEmbed()
+                const embed = new MessageEmbed()
                     .setColor("DARK_PURPLE")
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została stworzona!`)
@@ -46,7 +46,7 @@ module.exports = {
                 role = db.get(`${message.guild.id}_muted`) || {id: undefined}
                 role = message.guild.roles.cache.get(role.id)
                 if(!role) {
-                    const embed = new Discord.MessageEmbed()
+                    const embed = new MessageEmbed()
                         .setTitle("Rola nie istnieje!")
                         .setDescription("Aby stworzyć role użyj komendy `muted create` lub `muted set-role`")
                         .setColor("RED")
@@ -55,7 +55,7 @@ module.exports = {
                 message.guild.channels.cache.forEach(channel => {
                     channel.updateOverwrite(role, { SEND_MESSAGES: false })
                 })
-                const embed1 = new Discord.MessageEmbed()
+                const embed1 = new MessageEmbed()
                     .setColor("DARK_PURPLE")
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została zaktualizowana!`)
@@ -65,14 +65,14 @@ module.exports = {
                 if(!role)
                     return message.channel.send(errorNull("muted", "set-role <role>"))
                 if(role.position >= message.member.roles.cache.first.position) {
-                    const embed = new Discord.MessageEmbed()
+                    const embed = new MessageEmbed()
                         .setTitle("Rola nie może zostać ustawiona!")
                         .setDescription("Role którą chcesz ustawić jest na tej samej pozycji co twoja lub większa")
                         .setColor("RED")
                     return message.channel.send(embed)
                 }
                 if(role.position >= message.member.roles.cache.first.position) {
-                    const embed = new Discord.MessageEmbed()
+                    const embed = new MessageEmbed()
                         .setTitle("Rola nie może zostać ustawiona!")
                         .setDescription("Role którą chcesz ustawić jest na tej samej pozycji co moja lub większa")
                         .setColor("RED")
@@ -81,7 +81,7 @@ module.exports = {
                 db.set(`${message.guild.id}_muted`, {
                     id: role.id
                 })
-                const embed2 = new Discord.MessageEmbed()
+                const embed2 = new MessageEmbed()
                     .setColor("DARK_PURPLE")
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została ustawiona!`)

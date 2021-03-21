@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "channelinfo",
@@ -12,7 +12,7 @@ module.exports = {
         }
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
         const channel = message.mentions.channels.first() || message.channel
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setDescription(channel)
             .addFields(

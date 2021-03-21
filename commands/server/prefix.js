@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 const db = require("quick.db")
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
         if(!prefix)
             return  message.channel.send(errorNull("prefix","<text>"))
         db.set(`${message.guild.id}_prefix`,prefix)
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Prefix został zmieniony!")
             .setDescription("`" + prefix + "`")
             .setColor("DARK_PURPLE")

@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 const db = require("quick.db")
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
             return message.channel.send(errorNull("counting", "<disable/enable>"))
         if((args[0] || " ").toLowerCase() == "disable") {
             db.set(`${message.guild.id}_switch_counting`,0)
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Wyłączono liczenie!")
                 .setColor("DARK_PURPLE")
             return message.channel.send(embed)
@@ -19,7 +19,7 @@ module.exports = {
         if(!channel)
             return message.channel.send(errorNull("counting", "enable <channel>"))
         db.set(`${message.guild.id}_counting`, channel.id)
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Gotowe!")
             .setColor("DARK_PURPLE")
         message.channel.send(embed)
