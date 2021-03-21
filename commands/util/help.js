@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     name: "help",
@@ -6,7 +6,7 @@ module.exports = {
         function styled(string) {
             return "```\n" + string.split(" ").join("\n") + "```"
         }
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Lista komend")
             .setColor("DARK_PURPLE")
             .setThumbnail(client.user.avatarURL())

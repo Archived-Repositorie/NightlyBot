@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     name: "roleinfo",
@@ -9,7 +9,7 @@ module.exports = {
         }
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
         const role = message.mentions.roles.first() || message.guild.roles.cache.get(args.slice(0).join(" ")) || message.member.roles.cache.first()
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setDescription(role)
             .addFields(

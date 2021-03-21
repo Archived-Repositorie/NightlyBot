@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const db = require("quick.db")
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
         const channel = message.mentions.channels.first()
         if((args[0] || " ").toLowerCase() == "disable") {
             db.set(`${message.guild.id}_switch_join`,0)
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle("Wyłączono wiadomość o wejściu na serwer!")
                 .setColor("DARK_PURPLE")
             return message.channel.send(embed)
@@ -25,7 +25,7 @@ module.exports = {
             text: text,
             id: channel.id
         })
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Gotowe!")
             .setDescription(tags(text,message.member))
             .setColor("DARK_PURPLE")

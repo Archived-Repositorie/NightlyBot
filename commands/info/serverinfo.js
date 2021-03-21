@@ -1,11 +1,11 @@
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     name: "serverinfo",
     run: async(client,message,args) => {
         const guild = message.guild
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setAuthor(guild.name)
             .setThumbnail(guild.iconURL())

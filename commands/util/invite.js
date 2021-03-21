@@ -1,9 +1,9 @@
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 
 module.exports = {
     name: "invite",
     run: async(client,message,args) => {
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setTitle("Dodaj bota!")
             .setDescription("https://justfox.cf/nightlybot")
             .setURL("https://justfox.cf/nightlybot")

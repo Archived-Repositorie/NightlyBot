@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 function timee(d) {
     d = Number(d);
     var h = Math.floor(d / 3600);
@@ -33,7 +33,7 @@ module.exports = {
                 return message.channel.send(errorNull("slowmode", "<disable/enable>"))
             if ((args[0] || " ").toLowerCase() == "disable") {
                 message.channel.setRateLimitPerUser(0)
-                const embed = new Discord.MessageEmbed()
+                const embed = new MessageEmbed()
                     .setTitle("Wyłączono slowmode!")
                     .setColor("DARK_PURPLE")
                 return message.channel.send(embed)
@@ -46,12 +46,12 @@ module.exports = {
             if (!number || !time[timeType] || !timeType || !timeParsed)
                 return message.channel.send(errorNull("slowmode", "enable <time+timeType(second/minute/hour)> <[channel]>"))
             if (timeParsed > 21600 || timeParsed <= 0) {
-                const embed = new Discord.MessageEmbed()
+                const embed = new MessageEmbed()
                     .setColor("RED")
                     .setTitle("Zbyt wielki/mały slowmode!")
                 return message.channel.send(embed)
             }
-            const embed = new Discord.MessageEmbed()
+            const embed = new MessageEmbed()
                 .setColor("DARK_PURPLE")
                 .setTitle("Gotowe!")
                 .setDescription(`Slowmode ustawiono na ${timee(timeParsed)}`)
