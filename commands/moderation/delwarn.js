@@ -1,46 +1,50 @@
 const {MessageEmbed} = require("discord.js")
 const db = require("quick.db")
 
+function unpush(thing = 0,base) {
+    let things = db.get(base)
+    things.splice(thing,1)
+    db.set(base,things)
+}
+db.unpush = unpush
+
 module.exports = {
-    name: "warn",
+    name: "delwarn",
     run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
         const member = message.mentions.members.first()
-
+        const number = args[1]*1
         if (!message.member.hasPermission("VIEW_AUDIT_LOG"))
             return message.channel.send(errorPermissions("WYŚWIETLANIE DZIENNIKA ZDARZEŃ", "VIEW_AUDIT_LOG"))
         if(!member)
-            return message.channel.send(errorNull("warn", "<member>"))
-        if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
+            return message.channel.send(errorNull("delwarn", "<member>"))
+        if(!number)
+            return message.channel.send(errorNull("delwarn", "<member> <number>"))
+        const warns = db.get(`${member.guild.id}_${member.id}_warns`)
+        if(warns.length <= 0) {
             const embed = new MessageEmbed()
-                .setTitle("Nie posiadasz permisji!")
-                .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz ostrzegać")
+                .setTitle("Użytkownik nie posiada ostrzeżeń!")
                 .setColor("RED")
             return message.channel.send(embed)
         }
-        if(member.hasPermission("ADMINISTRATOR")) {
+        if(number >= warns.length) {
             const embed = new MessageEmbed()
-                .setTitle("Nie posiadasz permisji!")
-                .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
+                .setTitle("Takie ostrzeżenie nie istnieje!")
                 .setColor("RED")
             return message.channel.send(embed)
         }
-        db.push(`${member.guild.id}_${member.id}_warns`,args.slice(1).join(" ")  || "brak")
+        db.unpush(number,`${member.guild.id}_${member.id}_warns`)
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
             .setTitle("Gotowe!")
-            .setDescription("Użytkownik został ostrzeżony")
+            .setDescription("Użytkownikowi zostało usunięte ostrzeżenie")
             .addFields(
-                {
-                    name: "Powód",
-                    value: args.slice(1).join(" ")  || "Brak"
-                },
                 {
                     name: "Użytkownik",
                     value: member
                 },
                 {
-                    name: "Ilość",
-                    value: db.get(`${member.guild.id}_${member.id}_warns`).length
+                    name: "Numer",
+                    value: number
                 }
             )
         message.channel.send(embed)

@@ -1,4 +1,4 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 const db = require("quick.db")
 
 function paginate(arr, size) {
@@ -6,7 +6,6 @@ function paginate(arr, size) {
         let idx = Math.floor(i / size)
         let page = acc[idx] || (acc[idx] = [])
         page.push(val)
-
         return acc
     }, [])
 }
@@ -20,9 +19,11 @@ module.exports = {
             number = 0
         const warns = db.get(`${member.guild.id}_${member.id}_warns`) || []
         let numberPage = paginate(warns,5)
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
-            .setTitle("Ilość warnów")
+            .setTitle("Ilość ostrzeżeń")
+            .setFooter("Użyj warns <member> <numberOfCategory> do zobaczenia większej ilość ostrzeżeń")
+            .setDescription(member)
         try {
             for (var i = 0; i < numberPage[number].length; i++) {
                 let x = i + (5 * number)
