@@ -21,7 +21,7 @@ module.exports = {
         let numberPage = paginate(warns,5)
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
-            .setTitle("Ilość ostrzeżeń")
+            .setTitle(`Ilość ostrzeżeń #${number}`)
             .setFooter("Użyj warns <member> <numberOfCategory> do zobaczenia większej ilość ostrzeżeń")
             .setDescription(member)
         try {

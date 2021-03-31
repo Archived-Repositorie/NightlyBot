@@ -53,6 +53,7 @@ module.exports = {
                 .setColor("RED")
             return message.channel.send(embed)
         }
+
         if(role.position >= message.guild.me.roles.cache.first().size) {
             const embed = new MessageEmbed()
                 .setTitle("Rola nie można nadać!")
@@ -60,8 +61,10 @@ module.exports = {
                 .setColor("RED")
             return message.channel.send(embed)
         }
+
         if(!member)
             return message.channel.send(errorNull("tempmute", "<member>"))
+
         const mutedMember = { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
         if(mutedMember.check) {
             const embed = new MessageEmbed()
@@ -70,6 +73,7 @@ module.exports = {
                 .setColor("RED")
             return message.channel.send(embed)
         }
+
         if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
             const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
@@ -77,6 +81,7 @@ module.exports = {
                 .setColor("RED")
             return message.channel.send(embed)
         }
+
         if(member.hasPermission("ADMINISTRATOR")) {
             const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
@@ -89,6 +94,7 @@ module.exports = {
         const number = Math.floor(timedText.replace(/(^\d+)(.+$)/i, '$1'))
         const timeType = timedText.replace(/[^a-zA-Z]+/g, '') || NaN
         const timeParsed = number * time[timeType]
+
         if (!number || !time[timeType] || !timeType || !timeParsed)
             return message.channel.send(errorNull("tempmute", "<member> <time+timeType(second/minute/hour)>"))
         member.roles.add(role)
@@ -121,6 +127,6 @@ module.exports = {
             )
         message.channel.send(embed)
         await sleep(timeParsed * 1000)
-        member.roles.remove(role)
+        member.roles.remove(role).catch(err => console.log(err))
     }
 }

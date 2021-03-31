@@ -12,12 +12,12 @@ module.exports = {
     name: "delwarn",
     run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
         const member = message.mentions.members.first()
-        const number = args[1]*1
+        const number = args[1] * 1
         if (!message.member.hasPermission("VIEW_AUDIT_LOG"))
             return message.channel.send(errorPermissions("WYŚWIETLANIE DZIENNIKA ZDARZEŃ", "VIEW_AUDIT_LOG"))
         if(!member)
             return message.channel.send(errorNull("delwarn", "<member>"))
-        if(!number)
+        if(number != 0 && !number)
             return message.channel.send(errorNull("delwarn", "<member> <number>"))
         const warns = db.get(`${member.guild.id}_${member.id}_warns`)
         if(warns.length <= 0) {

@@ -107,9 +107,9 @@ try {
         const allOfTime = muted.time.sec - timeDiffInSecond //oblicza ile musi trwać jeszcze mute, muted.time.sec(czas trwania mute) - timeDiffInSecound(czas w którym użytwkonika nie było na serwerze + czas mute przed wyjście)
         if(!allOfTime || allOfTime <= 0)
             return member.roles.remove(role)
-        member.roles.add(role)
+        member.roles.add(role).catch(err => console.log(err))
         await sleep(allOfTime * 1000)
-        member.roles.remove(role)
+        member.roles.remove(role).catch(err => console.log(err))
     })
     client.on("ready", () => {
         console.log(` Zalogowano jako ${client.user.tag}\n`,
@@ -129,7 +129,7 @@ try {
         if (switched != 1) return;
         const joined = db.get(`${member.guild.id}_join`)
         const text = tags(joined.text, member)
-        member.guild.channels.cache.get(joined.id).send(text)
+        member.guild.channels.cache.get(joined.id).send(text).catch(err => console.log(err))
     })
 
 
@@ -141,7 +141,7 @@ try {
         if (msg.channel.id != countingChannel) return;
         const nextNumber = db.get(`${msg.guild.id}_number`) + 1
         if (msg.content != nextNumber) {
-            msg.delete()
+            msg.delete().catch(err => console.log(err))
             return msg.author.send(`${msg.author}, Podałeś złą liczbe!`)
         }
         db.set(`${msg.guild.id}_number`, nextNumber)

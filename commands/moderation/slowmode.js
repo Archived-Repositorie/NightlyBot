@@ -56,6 +56,6 @@ module.exports = {
                 .setTitle("Gotowe!")
                 .setDescription(`Slowmode ustawiono na ${timee(timeParsed)}`)
             message.channel.send(embed)
-            channel.setRateLimitPerUser(timeParsed)
+            channel.setRateLimitPerUser(timeParsed).catch(err => console.log(err))
     }
 }

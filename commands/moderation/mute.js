@@ -59,7 +59,7 @@ module.exports = {
                 .setColor("RED")
             return message.channel.send(embed)
         }
-        member.roles.add(role)
+        member.roles.add(role).catch(err => console.log(err))
         db.set(`${member.guild.id}_${member.id}_mute`,{
             muted: {
                 time: {

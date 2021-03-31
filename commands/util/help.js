@@ -23,7 +23,7 @@ module.exports = {
                 },
                 {
                     name: "Mod",
-                    value: styled("slowmode muted mute tempmute warn warns delwarn"),
+                    value: styled("slowmode muted mute tempmute warn warns delwarn ban tempban kick"),
                     inline: true
                 },
                 {
