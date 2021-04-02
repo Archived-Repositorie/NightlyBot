@@ -9,14 +9,19 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle("🔞 Only NSFW Channel 🔞")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
+
         const image = await nsfw.ass()
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
             .setImage(image)
             .setTitle("Ass")
             .setURL(image.url)
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
     }
 }

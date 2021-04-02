@@ -8,6 +8,8 @@ module.exports = {
             .setDescription("https://justfox.cf/nightlybot")
             .setURL("https://justfox.cf/nightlybot")
             .setColor("DARK_PURPLE")
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
     }
 }

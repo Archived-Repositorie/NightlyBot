@@ -5,15 +5,23 @@ module.exports = {
     name: "prefix",
     run: async(client,message,args,per,errorNull,errorPermissions) => {
         const prefix = args[0]
+
         if(!message.member.hasPermission("MANAGE_GUILD"))
             return message.channel.send(errorPermissions("ZARZĄDZANIE SERWEREM","MANAGE_SERVER"))
+                .catch(err => console.log(err))
+
         if(!prefix)
             return  message.channel.send(errorNull("prefix","<text>"))
+                .catch(err => console.log(err))
+
         db.set(`${message.guild.id}_prefix`,prefix)
+
         const embed = new MessageEmbed()
             .setTitle("Prefix został zmieniony!")
             .setDescription("`" + prefix + "`")
             .setColor("DARK_PURPLE")
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
     }
 }

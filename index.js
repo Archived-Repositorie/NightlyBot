@@ -10,7 +10,8 @@ const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric
 
 client.commands = new Collection()
 client.aliases = new Collection()
-client.categories = fs.readdirSync("./commands/");
+client.categories = fs.readdirSync("./commands/")
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 ["command"].forEach(handler => {
     fs.readdirSync("./commands/").forEach(dir => {
         const commands = fs.readdirSync(`./commands/${dir}/`).filter(file => file.endsWith(".js"))
@@ -21,6 +22,17 @@ client.categories = fs.readdirSync("./commands/");
         }
     })
 })
+
+for (const file of eventFiles) {
+    const event = require(`./events/${file}`)
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args, client))
+    } else {
+        client.on(event.name, (...args) => event.execute(...args, client))
+    }
+}
+
+
 
 const errorPermissions = function (polish,english) {
     const embed = new MessageEmbed()
@@ -62,6 +74,8 @@ function tags(text,member) {
         .split("#member.avatar#").join(member.user.displayAvatarURL())
 }
 
+module.exports = tags
+
 client.on("message", async message => {
     if(!message.guild) return;
     prefix = db.get(`${message.guild.id}_prefix`) || "%'"
@@ -81,79 +95,3 @@ client.on("message", async message => {
 })
 
 client.login(config.token)
-
-try {
-    client.on("guildMemberAdd", async member => {
-        const obj = {
-            muted: {
-                time: {
-                    date: undefined,
-                    sec: undefined
-                },
-                check: undefined
-            }
-        }
-        const { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
-        if(!muted.check) return;
-        const roleId = db.get(`${member.guild.id}_muted`) || {id: undefined}
-        const role = member.guild.roles.cache.get(roleId.id)
-        if(!role) return;
-        if(!muted.time.sec)
-            return member.roles.add(role)
-        const dateNow = new Date().getTime() //czas teraz
-        const dateMute = muted.time.date //czas wykonania mute
-        const timeDiff = Math.abs(dateMute - dateNow)  //czas w którym użytkownika nie było na serwerze + czas mute przed wyjściem
-        const timeDiffInSecond = Math.ceil(timeDiff / 1000) //zamienia w sekundy
-        const allOfTime = muted.time.sec - timeDiffInSecond //oblicza ile musi trwać jeszcze mute, muted.time.sec(czas trwania mute) - timeDiffInSecound(czas w którym użytwkonika nie było na serwerze + czas mute przed wyjście)
-        if(!allOfTime || allOfTime <= 0)
-            return member.roles.remove(role)
-        member.roles.add(role).catch(err => console.log(err))
-        await sleep(allOfTime * 1000)
-        member.roles.remove(role).catch(err => console.log(err))
-    })
-    client.on("ready", () => {
-        console.log(` Zalogowano jako ${client.user.tag}\n`,
-            `Serwery: ${client.guilds.cache.size}\n`,
-            `Użytkownicy: ${client.users.cache.size}`)
-        client.user.setStatus("idle")
-    })
-
-    client.on("guildCreate", () => {
-        console.log(` Dodano bota na nowy serwer!\n`,
-            `Serwery: ${client.guilds.cache.size}\n`,
-            `Użytkownicy: ${client.users.cache.size}`)
-    })
-
-    client.on("guildMemberAdd", member => {
-        const switched = db.get(`${member.guild.id}_switch_join`)
-        if (switched != 1) return;
-        const joined = db.get(`${member.guild.id}_join`)
-        const text = tags(joined.text, member)
-        member.guild.channels.cache.get(joined.id).send(text).catch(err => console.log(err))
-    })
-
-
-    client.on("message", msg => {
-        if (!msg.guild) return;
-        const switched = db.get(`${msg.guild.id}_switch_counting`)
-        if (switched != 1) return;
-        const countingChannel = db.get(`${msg.guild.id}_counting`)
-        if (msg.channel.id != countingChannel) return;
-        const nextNumber = db.get(`${msg.guild.id}_number`) + 1
-        if (msg.content != nextNumber) {
-            msg.delete().catch(err => console.log(err))
-            return msg.author.send(`${msg.author}, Podałeś złą liczbe!`)
-        }
-        db.set(`${msg.guild.id}_number`, nextNumber)
-    })
-
-    client.on("channelCreate", channel => {
-		if(!channel.guild) return;
-        let role = db.get(`${channel.guild.id}_muted`) || {id: undefined}
-        role = channel.guild.roles.cache.get(role.id)
-        if(!role) return;
-        channel.updateOverwrite(role, { SEND_MESSAGES: false })
-    })
-} catch (err) {
-    console.log(err)
-}

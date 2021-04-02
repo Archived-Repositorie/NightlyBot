@@ -25,37 +25,57 @@ module.exports = {
                 "hour": 3600
             }
             const channel = message.mentions.channels.first() || message.channel
+
             if (!message.member.hasPermission("MANAGE_CHANNELS"))
                 return message.channel.send(errorPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
+                    .catch(err => console.log(err))
+
             if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
                 return message.channel.send(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
+                    .catch(err => console.log(err))
+
             if (!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
                 return message.channel.send(errorNull("slowmode", "<disable/enable>"))
+                    .catch(err => console.log(err))
+
             if ((args[0] || " ").toLowerCase() == "disable") {
                 message.channel.setRateLimitPerUser(0)
+                    .catch(err => console.log(err))
+
                 const embed = new MessageEmbed()
                     .setTitle("Wyłączono slowmode!")
                     .setColor("DARK_PURPLE")
-                return message.channel.send(embed)
-            }
-            const timedText = (args[1] || " ").toLowerCase() || " "
 
+                return message.channel.send(embed)
+                    .catch(err => console.log(err))
+            }
+
+            const timedText = (args[1] || " ").toLowerCase() || " "
             const number = Math.floor(timedText.replace(/(^\d+)(.+$)/i, '$1'))
             const timeType = timedText.replace(/[^a-zA-Z]+/g, '') || NaN
             const timeParsed = number * time[timeType]
+
             if (!number || !time[timeType] || !timeType || !timeParsed)
                 return message.channel.send(errorNull("slowmode", "enable <time+timeType(second/minute/hour)> <[channel]>"))
+                    .catch(err => console.log(err))
+
             if (timeParsed > 21600 || timeParsed <= 0) {
                 const embed = new MessageEmbed()
                     .setColor("RED")
                     .setTitle("Zbyt wielki/mały slowmode!")
+
                 return message.channel.send(embed)
+                    .catch(err => console.log(err))
             }
             const embed = new MessageEmbed()
                 .setColor("DARK_PURPLE")
                 .setTitle("Gotowe!")
                 .setDescription(`Slowmode ustawiono na ${timee(timeParsed)}`)
+
             message.channel.send(embed)
+                .catch(err => console.log(err))
+
             channel.setRateLimitPerUser(timeParsed).catch(err => console.log(err))
+                .catch(err => console.log(err))
     }
 }

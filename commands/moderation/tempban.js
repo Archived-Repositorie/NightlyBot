@@ -35,19 +35,24 @@ module.exports = {
 
         if (!message.member.hasPermission("BAN_MEMBERS"))
             return message.channel.send(errorPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
+                .catch(err => console.log(err))
 
         if (!message.guild.me.hasPermission("BAN_MEMBERS"))
-            return message.channel.send(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
+            return message.channel.send(errorBotPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
+                .catch(err => console.log(err))
 
         if(!member)
             return message.channel.send(errorNull("tempban", "<member>"))
+                .catch(err => console.log(err))
 
         if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
             const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz zablokować")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
 
         if(member.hasPermission("ADMINISTRATOR")) {
@@ -55,7 +60,9 @@ module.exports = {
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
 
         if(!member.bannable) {
@@ -63,21 +70,23 @@ module.exports = {
                 .setTitle("Nie posiadam permisji!")
                 .setDescription("Użytkownik jest niemożliwy do zablokowania")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
 
         const timedText = (args[1] || " ").toLowerCase() || " "
-        console.log(timedText)
         const number = Math.floor(timedText.replace(/(^\d+)(.+$)/i, '$1'))
         const timeType = timedText.replace(/[^a-zA-Z]+/g, '') || NaN
         const timeParsed = number * time[timeType]
+
         if (!number || !time[timeType] || !timeType || !timeParsed)
             return message.channel.send(errorNull("tempban", "<member> <time+timeType(second/minute/hour)>"))
+
         member.ban({
             reason: args.slice(2).join(" ")  || "Brak"
-        }).catch(err => console.log(err))
-
-
+        })
+            .catch(err => console.log(err))
 
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
@@ -97,8 +106,11 @@ module.exports = {
                     value: member
                 }
             )
+
         message.channel.send(embed)
+
         await sleep(timeParsed * 1000)
+
         message.guild.members.unban(member, "Unbanned by bot").catch(err => console.log(err))
     }
 }

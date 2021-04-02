@@ -6,6 +6,7 @@ module.exports = {
         function styled(string) {
             return "```\n" + string.split(" ").join("\n") + "```"
         }
+
         const embed = new MessageEmbed()
             .setTitle("Lista komend")
             .setColor("DARK_PURPLE")
@@ -23,7 +24,7 @@ module.exports = {
                 },
                 {
                     name: "Mod",
-                    value: styled("slowmode muted mute tempmute warn warns delwarn ban tempban kick"),
+                    value: styled("slowmode muted mute tempmute warn warns delwarn ban unban tempban kick"),
                     inline: true
                 },
                 {
@@ -42,6 +43,8 @@ module.exports = {
                     inline: true
                 }
             )
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
     }
 }

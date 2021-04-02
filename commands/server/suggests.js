@@ -7,25 +7,39 @@ module.exports = {
 
         if(!message.member.hasPermission("MANAGE_GUILD"))
             return message.channel.send(errorPermissions("ZARZĄDZANIE SERWEREM","MANAGE_SERVER"))
+                .catch(err => console.log(err))
+
         if(!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
             return message.channel.send(errorNull("suggests", "<disable/enable>"))
+                .catch(err => console.log(err))
+
         const channel = message.mentions.channels.first()
+
         if((args[0] || " ").toLowerCase() == "disable") {
             db.set(`${message.guild.id}_switch_join`,0)
+
             const embed = new MessageEmbed()
                 .setTitle("Wyłączono propozycje na serwerze!")
                 .setColor("DARK_PURPLE")
+
             return message.channel.send(embed)
+
         }
         if(!channel)
             return message.channel.send(errorNull("suggests", "enable <channel>"))
+                .catch(err => console.log(err))
+
         db.set(`${message.guild.id}_suggests`, {
             id: channel.id
         })
+
         const embed = new MessageEmbed()
             .setTitle("Gotowe!")
             .setColor("DARK_PURPLE")
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
+
         db.set(`${message.guild.id}_switch_suggests`,1)
     }
 }

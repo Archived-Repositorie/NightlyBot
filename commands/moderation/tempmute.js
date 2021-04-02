@@ -42,16 +42,23 @@ module.exports = {
 
         if (!message.member.hasPermission("MUTE_MEMBERS"))
             return message.channel.send(errorPermissions("WYCISZANIE UŻYTKOWNIKÓW", "MUTE_MEMBERS"))
+                .catch(err => console.log(err))
+
         if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
             return message.channel.send(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
+                .catch(err => console.log(err))
+
         const roleId = db.get(`${message.guild.id}_muted`) || {id: undefined}
         const role = message.guild.roles.cache.get(roleId.id)
+
         if(!role) {
             const embed = new MessageEmbed()
                 .setTitle("Rola nie istnieje!")
                 .setDescription("Aby stworzyć role użyj komendy `muted create` lub `muted set-role`")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
 
         if(role.position >= message.guild.me.roles.cache.first().size) {
@@ -59,19 +66,25 @@ module.exports = {
                 .setTitle("Rola nie można nadać!")
                 .setDescription("Role którą chcesz wyciszyć jest na tej samej pozycji co moja lub większa")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
 
         if(!member)
             return message.channel.send(errorNull("tempmute", "<member>"))
+                .catch(err => console.log(err))
 
         const mutedMember = { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
+
         if(mutedMember.check) {
             const embed = new MessageEmbed()
                 .setTitle("Użytkownik jest już wyciszony!")
                 .setDescription("Odcisz użytkownika aby nadać znowu wyciszenie")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
 
         if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
@@ -79,7 +92,9 @@ module.exports = {
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyciszyć")
                 .setColor("RED")
+
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
 
         if(member.hasPermission("ADMINISTRATOR")) {
@@ -87,17 +102,23 @@ module.exports = {
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
-            return message.channel.send(embed)
-        }
-        const timedText = (args[1] || " ").toLowerCase() || " "
 
+            return message.channel.send(embed)
+                .catch(err => console.log(err))
+        }
+
+        const timedText = (args[1] || " ").toLowerCase() || " "
         const number = Math.floor(timedText.replace(/(^\d+)(.+$)/i, '$1'))
         const timeType = timedText.replace(/[^a-zA-Z]+/g, '') || NaN
         const timeParsed = number * time[timeType]
 
         if (!number || !time[timeType] || !timeType || !timeParsed)
             return message.channel.send(errorNull("tempmute", "<member> <time+timeType(second/minute/hour)>"))
+                .catch(err => console.log(err))
+
         member.roles.add(role)
+            .catch(err => console.log(err))
+
         db.set(`${member.guild.id}_${member.id}_mute`,{
             muted: {
                 time: {
@@ -107,6 +128,7 @@ module.exports = {
                 check: true
             }
         })
+
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
             .setTitle("Gotowe!")
@@ -125,8 +147,13 @@ module.exports = {
                     value: member
                 }
             )
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
+
         await sleep(timeParsed * 1000)
-        member.roles.remove(role).catch(err => console.log(err))
+
+        member.roles.remove(role)
+            .catch(err => console.log(err))
     }
 }

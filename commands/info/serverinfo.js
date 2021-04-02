@@ -53,5 +53,7 @@ module.exports = {
             )
             .setColor("DARK_PURPLE")
         message.channel.send(embed)
+
+            .catch(err => console.log(err))
     }
 }

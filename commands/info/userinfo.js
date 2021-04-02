@@ -6,7 +6,10 @@ module.exports = {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
         const member = message.mentions.members.first() || message.member
         let bot = ""
-        if(member.user.bot) bot = "🤖"
+
+        if(member.user.bot)
+            bot = "🤖"
+
         const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setDescription(`${member} ${bot}`)
@@ -35,6 +38,8 @@ module.exports = {
                 }
             )
             .setColor("DARK_PURPLE")
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
     }
 }

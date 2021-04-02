@@ -10,13 +10,17 @@ module.exports = {
                 .setTitle("🔞 Only NSFW Channel 🔞")
                 .setColor("RED")
             return message.channel.send(embed)
+                .catch(err => console.log(err))
         }
+
         const image = await nsfw.boobs()
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
             .setImage(image)
             .setTitle("Boobs")
             .setURL(image.url)
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
     }
 }

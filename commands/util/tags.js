@@ -6,6 +6,7 @@ module.exports = {
         function styled(string) {
             return "```\n" + string.split(" ").join("\n") + "```"
         }
+
         const embed = new MessageEmbed()
             .setTitle("Lista CMD tagów")
             .setColor("DARK_PURPLE")
@@ -21,6 +22,8 @@ module.exports = {
                     inline: true
                 }
             )
+
         message.channel.send(embed)
+            .catch(err => console.log(err))
     }
 }
