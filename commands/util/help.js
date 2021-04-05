@@ -36,13 +36,18 @@ module.exports = {
                   name: "4Fun",
                   value: styled("counting dad-jokes dog never-have-i-ever"),
                     inline: true
-                },
-                {
-                    name: "NSFW",
-                    value: styled("anal ass boobs rule34"),
-                    inline: true
                 }
             )
+
+        if(message.channel.nsfw)
+            embed
+                .addFields(
+                    {
+                        name: "NSFW",
+                        value: styled("anal ass boobs rule34"),
+                        inline: true
+                    }
+                    )
 
         message.channel.send(embed)
             .catch(err => console.log(err))
