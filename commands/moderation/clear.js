@@ -6,11 +6,11 @@ module.exports = {
         const number = args[0]*1
 
         if (!message.member.hasPermission("MANAGE_MESSAGES"))
-            return message.channel.send(errorPermissions("ZARZĄDZANIE WIADOMOŚCIAMI", "MANAGE_MESSAGES"))
+            return message.reply(errorPermissions("ZARZĄDZANIE WIADOMOŚCIAMI", "MANAGE_MESSAGES"))
                 .catch(err => console.log(err))
 
         if(!number || number < 0 || number > 101)
-            return message.channel.send(errorNull("delwarn", "<number ↑1 ↓100>"))
+            return message.reply(errorNull("delwarn", "<number ↑1 ↓100>"))
                 .catch(err => console.log(err))
 
         message.channel.bulkDelete(number, true)
@@ -27,7 +27,7 @@ module.exports = {
                 }
             )
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

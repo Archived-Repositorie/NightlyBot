@@ -7,11 +7,11 @@ module.exports = {
         const prefix = args[0]
 
         if(!message.member.hasPermission("MANAGE_GUILD"))
-            return message.channel.send(errorPermissions("ZARZĄDZANIE SERWEREM","MANAGE_SERVER"))
+            return message.reply(errorPermissions("ZARZĄDZANIE SERWEREM","MANAGE_SERVER"))
                 .catch(err => console.log(err))
 
         if(!prefix)
-            return  message.channel.send(errorNull("prefix","<text>"))
+            return  message.reply(errorNull("prefix","<text>"))
                 .catch(err => console.log(err))
 
         db.set(`${message.guild.id}_prefix`,prefix)
@@ -21,7 +21,7 @@ module.exports = {
             .setDescription("`" + prefix + "`")
             .setColor("DARK_PURPLE")
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

@@ -9,11 +9,11 @@ module.exports = {
         let role = message.mentions.roles.first() || message.guild.roles.cache.get(args.slice(0).join(" ")) || ""
 
         if (!message.member.hasPermission("MANAGE_ROLES"))
-            return message.channel.send(errorPermissions("ZARZĄDZANIE ROLAMI", "MANAGE_ROLES"))
+            return message.reply(errorPermissions("ZARZĄDZANIE ROLAMI", "MANAGE_ROLES"))
                 .catch(err => console.log(err))
 
         if (!message.guild.me.hasPermission(["MANAGE_CHANNELS","MANAGE_ROLES"]))
-            return message.channel.send(errorBotPermissions("ZARZĄDZANIE KANAŁAMI,ZARZĄDZANIE ROLAMI", "MANAGE_CHANNELS,MANAGE_ROLES"))
+            return message.reply(errorBotPermissions("ZARZĄDZANIE KANAŁAMI,ZARZĄDZANIE ROLAMI", "MANAGE_CHANNELS,MANAGE_ROLES"))
                 .catch(err => console.log(err))
 
         switch(text) {
@@ -27,7 +27,7 @@ module.exports = {
                         .setDescription("Jeśli rola nie blokuje wysyłania wiadomość wpisz komende `muted reload-role` lub zmniejsz permisje użytkownika")
                         .setColor("RED")
 
-                    return message.channel.send(embed)
+                    return message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
@@ -58,7 +58,7 @@ module.exports = {
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została stworzona!`)
 
-                message.channel.send(embed)
+                message.reply(embed)
                     .catch(err => console.log(err))
 
                 break;
@@ -73,7 +73,7 @@ module.exports = {
                         .setDescription("Aby stworzyć role użyj komendy `muted create` lub `muted set-role`")
                         .setColor("RED")
 
-                    return message.channel.send(embed)
+                    return message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
@@ -88,13 +88,13 @@ module.exports = {
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została zaktualizowana!`)
 
-                message.channel.send(embed1)
+                message.reply(embed1)
                     .catch(err => console.log(err))
 
                 break;
             case "set-role": //option set-role
                 if(!role)
-                    return message.channel.send(errorNull("muted", "set-role <role>"))
+                    return message.reply(errorNull("muted", "set-role <role>"))
                         .catch(err => console.log(err))
 
                 if(role.position >= message.member.roles.cache.first.position) {
@@ -103,7 +103,7 @@ module.exports = {
                         .setDescription("Role którą chcesz ustawić jest na tej samej pozycji co twoja lub większa")
                         .setColor("RED")
 
-                    return message.channel.send(embed)
+                    return message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
@@ -113,7 +113,7 @@ module.exports = {
                         .setDescription("Role którą chcesz ustawić jest na tej samej pozycji co moja lub większa")
                         .setColor("RED")
 
-                    return message.channel.send(embed)
+                    return message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
@@ -126,13 +126,13 @@ module.exports = {
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została ustawiona!`)
 
-                message.channel.send(embed2)
+                message.reply(embed2)
                     .catch(err => console.log(err))
 
                 break;
             default:
 
-                message.channel.send(errorNull("muted", "<set-role/create/reload-role>"))
+                message.reply(errorNull("muted", "<set-role/create/reload-role>"))
                     .catch(err => console.log(err))
         }
     }

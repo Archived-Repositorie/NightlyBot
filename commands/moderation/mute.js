@@ -16,11 +16,11 @@ module.exports = {
         }
 
         if (!message.member.hasPermission("MUTE_MEMBERS"))
-            return message.channel.send(errorPermissions("WYCISZANIE UŻYTKOWNIKÓW", "MUTE_MEMBERS"))
+            return message.reply(errorPermissions("WYCISZANIE UŻYTKOWNIKÓW", "MUTE_MEMBERS"))
                 .catch(err => console.log(err))
 
         if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
-            return message.channel.send(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
+            return message.reply(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
                 .catch(err => console.log(err))
 
         const roleId = db.get(`${message.guild.id}_muted`) || {id: undefined}
@@ -32,7 +32,7 @@ module.exports = {
                 .setDescription("Aby stworzyć role użyj komendy `muted create` lub `muted set-role`")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -42,12 +42,12 @@ module.exports = {
                 .setDescription("Role którą chcesz wyciszyć jest na tej samej pozycji co moja lub większa")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
         if(!member)
-            return message.channel.send(errorNull("mute", "<member>"))
+            return message.reply(errorNull("mute", "<member>"))
 
         const mutedMember = { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
 
@@ -57,7 +57,7 @@ module.exports = {
                 .setDescription("Odcisz użytkownika aby nadać znowu wyciszenie")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -67,7 +67,7 @@ module.exports = {
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyciszyć")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -77,7 +77,7 @@ module.exports = {
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -109,7 +109,7 @@ module.exports = {
                 }
                 )
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

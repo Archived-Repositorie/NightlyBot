@@ -8,12 +8,12 @@ module.exports = {
                 .setTitle("🔞 Only NSFW Channel 🔞")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
         if(!args[0])
-            return message.channel.send(errorNull(this.name, "<text>"))
+            return message.reply(errorNull(this.name, "<text>"))
                 .catch(err => console.log(err))
 
         const response = await posts({tags:[args[0]]})
@@ -23,7 +23,7 @@ module.exports = {
                 .setTitle("Nie znaleziono!")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -36,14 +36,14 @@ module.exports = {
                 .setTitle((args[0] || " ").toLowerCase())
                 .setURL(randomValue.file_url)
 
-            message.channel.send(embed)
+            message.reply(embed)
                 .catch(err => console.log(err))
         }catch(err) {
             const embed = new MessageEmbed()
                 .setTitle("Nie znaleziono!")
                 .setColor("RED")
 
-            message.channel.send(embed)
+            message.reply(embed)
                 .catch(err => console.log(err))
         }
     }

@@ -12,14 +12,14 @@ module.exports = {
                 .setTitle("Nie ustawiono kanału!")
                 .setColor("DARK_PURPLE")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
         const text = args.join(" ")
 
         if (!text)
-            return message.channel.send(errorNull("suggest", "<text>"))
+            return message.reply(errorNull("suggest", "<text>"))
                 .catch(err => console.log(err))
 
         const channel = db.get(`${message.guild.id}_suggests`)

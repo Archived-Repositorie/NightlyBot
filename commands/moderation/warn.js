@@ -7,11 +7,11 @@ module.exports = {
         const member = message.mentions.members.first()
 
         if (!message.member.hasPermission("VIEW_AUDIT_LOG"))
-            return message.channel.send(errorPermissions("WYŚWIETLANIE DZIENNIKA ZDARZEŃ", "VIEW_AUDIT_LOG"))
+            return message.reply(errorPermissions("WYŚWIETLANIE DZIENNIKA ZDARZEŃ", "VIEW_AUDIT_LOG"))
                 .catch(err => console.log(err))
 
         if(!member)
-            return message.channel.send(errorNull("warn", "<member>"))
+            return message.reply(errorNull("warn", "<member>"))
                 .catch(err => console.log(err))
 
         if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
@@ -20,7 +20,7 @@ module.exports = {
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz ostrzegać")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -30,7 +30,7 @@ module.exports = {
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -55,7 +55,7 @@ module.exports = {
                 }
             )
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

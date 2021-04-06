@@ -3,7 +3,6 @@ const db = require("quick.db")
 module.exports = {
     name: "message",
     async execute(msg,client) {
-        console.log("test")
         if (!msg.guild)
             return;
 

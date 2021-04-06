@@ -10,7 +10,7 @@ module.exports = {
                 .setTitle("🔞 Only NSFW Channel 🔞")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -21,7 +21,7 @@ module.exports = {
             .setTitle("Ass")
             .setURL(image.url)
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

@@ -8,15 +8,15 @@ module.exports = {
         const member = bans.get(memberID)
 
         if (!message.member.hasPermission("BAN_MEMBERS"))
-            return message.channel.send(errorPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
+            return message.reply(errorPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
                 .catch(err => console.log(err))
 
         if (!message.guild.me.hasPermission("BAN_MEMBERS"))
-            return message.channel.send(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
+            return message.reply(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
                 .catch(err => console.log(err))
 
         if(!memberID)
-            return message.channel.send(errorNull("unban", "<memberID>"))
+            return message.reply(errorNull("unban", "<memberID>"))
                 .catch(err => console.log(err))
 
         if(bans.size < 1 || !member) {
@@ -25,7 +25,7 @@ module.exports = {
                 .setDescription("Użytkownik nie jest zablokowany lub nie podałes poprawnego ID")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -44,7 +44,7 @@ module.exports = {
                 }
             )
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
 
         message.guild.members.unban(member.user.id,args.slice(1).join(" ")  || "Brak")

@@ -7,11 +7,11 @@ module.exports = {
         const channel = message.mentions.channels.first()
 
         if(!message.member.hasPermission("MANAGE_CHANNELS"))
-            return message.channel.send(errorPermissions("ZARZĄDZANIE KANAŁAMI","MANAGE_CHANNELS"))
+            return message.reply(errorPermissions("ZARZĄDZANIE KANAŁAMI","MANAGE_CHANNELS"))
                 .catch(err => console.log(err))
 
         if(!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
-            return message.channel.send(errorNull("counting", "<disable/enable>"))
+            return message.reply(errorNull("counting", "<disable/enable>"))
                 .catch(err => console.log(err))
 
         if((args[0] || " ").toLowerCase() == "disable") {
@@ -21,12 +21,12 @@ module.exports = {
                 .setTitle("Wyłączono liczenie!")
                 .setColor("DARK_PURPLE")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
         if(!channel)
-            return message.channel.send(errorNull("counting", "enable <channel>"))
+            return message.reply(errorNull("counting", "enable <channel>"))
 
         db.set(`${message.guild.id}_counting`, channel.id)
 
@@ -34,7 +34,7 @@ module.exports = {
             .setTitle("Gotowe!")
             .setColor("DARK_PURPLE")
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
 
         db.set(`${message.guild.id}_switch_counting`,1)

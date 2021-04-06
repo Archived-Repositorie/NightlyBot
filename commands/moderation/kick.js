@@ -6,15 +6,15 @@ module.exports = {
         const member = message.mentions.members.first()
 
         if (!message.member.hasPermission("KICK_MEMBERS"))
-            return message.channel.send(errorPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
+            return message.reply(errorPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
                 .catch(err => console.log(err))
 
         if (!message.guild.me.hasPermission("KICK_MEMBERS"))
-            return message.channel.send(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
+            return message.reply(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
                 .catch(err => console.log(err))
 
         if(!member)
-            return message.channel.send(errorNull("kick", "<member>"))
+            return message.reply(errorNull("kick", "<member>"))
                 .catch(err => console.log(err))
 
         if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
@@ -23,7 +23,7 @@ module.exports = {
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyrzucić")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -33,7 +33,7 @@ module.exports = {
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -43,7 +43,7 @@ module.exports = {
                 .setDescription("Użytkownik jest niemożliwy do wyrzucenia")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -65,7 +65,7 @@ module.exports = {
                 }
             )
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

@@ -9,7 +9,7 @@ module.exports = {
             .setURL("https://justfox.cf/nightlybot")
             .setColor("DARK_PURPLE")
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

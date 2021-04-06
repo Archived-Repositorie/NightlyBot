@@ -12,11 +12,11 @@ module.exports = {
         try {
             const returned = eval(args.join(" "))
 
-            message.author.send("```" + returned + "```")
+            message.reply("```" + returned + "```")
                 .catch(err => console.log(err))
 
         } catch (err) {
-            message.author.send("```" + err + "```")
+            message.reply("```" + err + "```")
                 .catch(err => console.log(err))
         }
     }

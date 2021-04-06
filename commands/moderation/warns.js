@@ -38,7 +38,7 @@ module.exports = {
             err
         }
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }

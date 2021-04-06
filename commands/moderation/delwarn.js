@@ -15,15 +15,15 @@ module.exports = {
         const number = args[1] * 1
 
         if (!message.member.hasPermission("VIEW_AUDIT_LOG"))
-            return message.channel.send(errorPermissions("WYŚWIETLANIE DZIENNIKA ZDARZEŃ", "VIEW_AUDIT_LOG"))
+            return message.reply(errorPermissions("WYŚWIETLANIE DZIENNIKA ZDARZEŃ", "VIEW_AUDIT_LOG"))
                 .catch(err => console.log(err))
 
         if(!member)
-            return message.channel.send(errorNull("delwarn", "<member>"))
+            return message.reply(errorNull("delwarn", "<member>"))
                 .catch(err => console.log(err))
 
         if(number != 0 && !number)
-            return message.channel.send(errorNull("delwarn", "<member> <number>"))
+            return message.reply(errorNull("delwarn", "<member> <number>"))
                 .catch(err => console.log(err))
 
         const warns = db.get(`${member.guild.id}_${member.id}_warns`)
@@ -33,7 +33,7 @@ module.exports = {
                 .setTitle("Użytkownik nie posiada ostrzeżeń!")
                 .setColor("RED")
 
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -41,7 +41,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle("Takie ostrzeżenie nie istnieje!")
                 .setColor("RED")
-            return message.channel.send(embed)
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -62,7 +62,7 @@ module.exports = {
                 }
             )
 
-        message.channel.send(embed)
+        message.reply(embed)
             .catch(err => console.log(err))
     }
 }
