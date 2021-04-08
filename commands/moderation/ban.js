@@ -1,52 +1,71 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "ban",
-    run: async(client,message,args) => {
-        if(!message.member.hasPermission("BAN_MEMBERS")) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("You don't have permissions!")
-                .setDescription("You do not have permissions to ban users")
-                .setTimestamp()
-                .setColor("DARK_RED")
-                .setFooter("CherryBot 2021")
-            return message.reply(embed)
-        }
+    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
         const member = message.mentions.members.first()
-        if(!member) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("Specify the user!")
-                .setDescription("Mention any user in the message")
-                .setTimestamp()
-                .setColor("DARK_RED")
-                .setFooter("CherryBot 2021")
+
+        if (!message.member.hasPermission("BAN_MEMBERS"))
+            return message.reply(errorPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
+                .catch(err => console.log(err))
+
+        if (!message.guild.me.hasPermission("BAN_MEMBERS"))
+            return message.reply(errorBotPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
+                .catch(err => console.log(err))
+
+        if(!member)
+            return message.reply(errorNull("ban", "<member>"))
+                .catch(err => console.log(err))
+
+        if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
+            const embed = new MessageEmbed()
+                .setTitle("Nie posiadasz permisji!")
+                .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz zablokować")
+                .setColor("RED")
+
             return message.reply(embed)
+                .catch(err => console.log(err))
         }
+
+        if(member.hasPermission("ADMINISTRATOR")) {
+            const embed = new MessageEmbed()
+                .setTitle("Nie posiadasz permisji!")
+                .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
+                .setColor("RED")
+
+            return message.reply(embed)
+                .catch(err => console.log(err))
+        }
+
         if(!member.bannable) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("You cannot ban a user!")
-                .setDescription("I do not have permissions to ban this user")
-                .setTimestamp()
-                .setColor("DARK_RED")
-                .setFooter("CherryBot 2021")
+            const embed = new MessageEmbed()
+                .setTitle("Nie posiadam permisji!")
+                .setDescription("Użytkownik jest niemożliwy do zablokowania")
+                .setColor("RED")
+
             return message.reply(embed)
+                .catch(err => console.log(err))
         }
-        const reason = args.slice(1).join(" ") || "nothing"
-        member.ban({
-            reason: reason
-        })
-        const embed = new Discord.MessageEmbed()
-            .setTitle("User has been successfully banned")
-            .addFields({
-                name: "Reason",
-                value: reason
-            },{
-                name: "User",
-                value: member
-            })
-            .setTimestamp()
-            .setColor("DARK_RED")
-            .setFooter("CherryBot 2021")
+
+        member.ban(args.slice(1).join(" ")  || "Brak")
+            .catch(err => console.log(err))
+
+        const embed = new MessageEmbed()
+            .setColor("DARK_PURPLE")
+            .setTitle("Gotowe!")
+            .setDescription("Użytkownik został zablokowany")
+            .addFields(
+                {
+                    name: "Powód",
+                    value: args.slice(1).join(" ")  || "Brak"
+                },
+                {
+                    name: "Użytkownik",
+                    value: member
+                }
+            )
+
         message.reply(embed)
+            .catch(err => console.log(err))
     }
 }

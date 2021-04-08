@@ -1,48 +1,33 @@
-const Discord = require("discord.js")
+const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "clear",
-    run: async(client,message,args) => {
-        if(!message.member.hasPermission("MANAGE_MESSAGES")) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("You don't have permissions!")
-                .setDescription("You do not have permissions to manage messages")
-                .setTimestamp()
-                .setColor("DARK_RED")
-                .setFooter("CherryBot 2021")
-            return message.reply(embed)
-        }
-        const number = Math.round(args[0] * 1)
-        if(!number) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("You didn't give a number!")
-                .setDescription("Enter any number in the message")
-                .setTimestamp()
-                .setColor("DARK_RED")
-                .setFooter("CherryBot 2021")
-            return message.reply(embed)
-        }
-        if(number > 100 || number < 1) {
-            const embed = new Discord.MessageEmbed()
-                .setTitle("The number given is incorrect!")
-                .setDescription("Give a number greater than 1 and less than 100")
-                .setTimestamp()
-                .setColor("DARK_RED")
-                .setFooter("CherryBot 2021")
-            return message.reply(embed)
-        }
-        message.delete()
-        message.channel.messages.fetch({
-            limit: number,
-        }).then((messages) => {
-            message.channel.bulkDelete(messages).catch(error => error);
-        });
-        const embed = new Discord.MessageEmbed()
-            .setTitle(`Deleted ${number} message!`)
-            .setTimestamp()
-            .setColor("DARK_RED")
-            .setFooter("CherryBot 2021")
-        message.reply(embed)
+    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+        const number = args[0]*1
 
+        if (!message.member.hasPermission("MANAGE_MESSAGES"))
+            return message.reply(errorPermissions("ZARZĄDZANIE WIADOMOŚCIAMI", "MANAGE_MESSAGES"))
+                .catch(err => console.log(err))
+
+        if(!number || number < 0 || number > 101)
+            return message.reply(errorNull("delwarn", "<number ↑1 ↓100>"))
+                .catch(err => console.log(err))
+
+        message.channel.bulkDelete(number, true)
+            .catch(err => console.log(err))
+
+        const embed = new MessageEmbed()
+            .setColor("DARK_PURPLE")
+            .setTitle("Gotowe!")
+            .setDescription("Wyczyszczono wiadomość na kanale")
+            .addFields(
+                {
+                    name: "Podana liczba",
+                    value: number
+                }
+            )
+
+        message.reply(embed)
+            .catch(err => console.log(err))
     }
 }
