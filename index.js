@@ -1,125 +1,94 @@
-const {Client, Collection, MessageEmbed} = require("discord.js")
-const config = require("./config.json")
+const Discord = require("discord.js");
+const fs = require("fs");
+const client = new Discord.Client({
+    disableEveryone: true,
+    autoReconnect: true
+});
 const db = require("quick.db")
-const fs = require('fs')
-
-const sleep = t => new Promise(r => setTimeout(r, t))
-const client = new Client()
-const options = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric' }
-
-client.commands = new Collection()
-client.aliases = new Collection()
-client.categories = fs.readdirSync("./commands/")
-
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
-
+client.commands = new Discord.Collection();
+client.aliases = new Discord.Collection();
+client.categories = fs.readdirSync("./commands/");
 ["command"].forEach(handler => {
     fs.readdirSync("./commands/").forEach(dir => {
         const commands = fs.readdirSync(`./commands/${dir}/`).filter(file => file.endsWith(".js"))
-
         for (let file of commands) {
             let pull = require(`./commands/${dir}/${file}`)
-
             client.commands.set(pull.name, pull)
-
             if (pull.aliases && Array.isArray(pull.aliases)) pull.aliases.forEach(alias => client.aliases.set(alias, pull.name))
         }
     })
 })
+let prefix
+client.on("ready", async erl => {
+    const servers = client.guilds.cache.toJSON()
 
-for (const file of eventFiles) {
-    const event = require(`./events/${file}`)
+    console.log("========")
 
-    if (!event.once) {
-        client.on(event.name, async (...args) => await event.execute(...args, client))
+    for(let i = 0; i < servers.length; i++ ) {
+        if(client.guilds.cache.get(servers[i].id).members.cache.size < 30 && servers[i].id != "826105025126072330")
+            client.guilds.cache.get(servers[i].id).leave()
 
-    } else {
-        client.once(event.name, async (...args) =>  await event.execute(...args, client))
+        console.log(i)
     }
+    console.log("========")
+    console.log(`Logged as ${client.user.tag}`)
+	const sleep = t => new Promise(r => setTimeout(r, t));
+	while(true) {
+    	client.user.setPresence({
+        	activity: {
+            	name: "Mention me!",
+            	type: "COMPETING"
+        	}
+    	})
+		await sleep(50000)
+	}
+})
 
-}
+client.on("message", msg => {
+    try {
+    if(!msg.mentions.members.first()) return;
+    }
+    catch(err) {
+	return err;
+    }
+    if(msg.mentions.members.first().user.id != client.user.id) return;
+    if(!msg.guild) return;
+    const prefix = db.get(`${msg.guild.id}_prefix`) || "&"
+    const embed = new Discord.MessageEmbed()
+        .setTitle("Hello user!")
+        .setDescription(`My prefix is ${prefix}, if u want add me [click here!](https://discord.com/oauth2/authorize?client_id=602408013269041168&scope=bot&permissions=8)`
+            + `\nIf u want u can vote on bot [click here!](https://top.gg/bot/602408013269041168/vote)`
+        )
+        .setThumbnail(client.user.avatarURL({size: 4096, dynamic: true}))
+        .setTimestamp()
+        .setColor("DARK_RED")
+        .setFooter("CherryBot 2021")
+    msg.reply(embed)
+})
 
-
-
-const errorPermissions = function (polish,english) {
-    const embed = new MessageEmbed()
-        .setTitle("Nie posiadasz permisji!")
-        .setDescription(`Aby użyć komendy musisz posiadać permisje \`${polish}(${english})\``)
-        .setColor("RED")
-
-    return embed
-}
-const errorNull = function (command,arguments) {
-    const embed = new MessageEmbed()
-        .setTitle("Użyj poprawnie komendy!")
-        .setDescription(`Użyj \`${command} ${arguments}\``)
-        .setColor("RED")
-
-    return embed
-}
-const errorBotPermissions = function (polish,english) {
-    const embed = new MessageEmbed()
-        .setTitle("Nie posiadam permisji!")
-        .setDescription(`Aby użyć komendy musę posiadać permisje \`${polish}(${english})\``)
-        .setColor("RED")
-
-    return embed
-}
-
-function tags(text,member) {
-    return text
-        //guild
-        .split("#guild.name#").join(member.guild.name)
-        .split("#guild.members#").join(member.guild.memberCount)
-        .split("#guild.icon#").join(member.guild.iconURL() || "")
-        .split("#guild.createdAt#").join(member.guild.createdAt.toLocaleDateString("pl-PL",options))
-        //member
-        .split("#member.name#").join(member.user.name)
-        .split("#member.mention#").join(member)
-        .split("#member.tag#").join(member.user.tag)
-        .split("#member.id#").join(member.user.id)
-        .split("#member.name#").join(member.user.name)
-        .split("#member.joinedAt#").join(member.joinedAt.toLocaleDateString("pl-PL",options))
-        .split("#member.createdAt#").join(member.user.createdAt.toLocaleDateString("pl-PL",options))
-        .split("#member.avatar#").join(member.user.displayAvatarURL())
-}
-
-
+client.on("guildCreate", guild => {
+	if(guild.id == "826105025126072333") return;
+	if(guild.members.cache.get("537360299456462852")) return;
+	if(guild.members.cache.size < 30) 
+		guild.leave()
+			.catch(err => console.log(err))
+})
 client.on("message", async message => {
-    if(!message.guild)
-        return;
-
-    prefix = db.get(`${message.guild.id}_prefix`) || "%'"
-
-    if (!message.content.startsWith(prefix))
-        return;
-
-    if(message.author.bot)
-        return;
-
-    if (!message.member)
-        message.member = await message.guild.fetchMember(message)
+    if(!message.guild) return;
+    prefix = db.get(`${message.guild.id}_prefix`) || "&"
+    if (!message.content.startsWith(prefix)) return
+    if(message.author.bot) return
+    if (!message.member) message.member = await message.guild.fetchMember(message)
 
     const args = message.content.slice(prefix.length).trim().split(' ')
     const cmd = args.shift().toLowerCase()
 
-    if (cmd.length === 0)
-        return;
-
+    if (cmd.length === 0) return;
     const comm = client.commands.get(cmd)
     let command = client.commands.get(cmd)
-
-    if (!command)
-        command = client.commands.get(client.aliases.get(cmd))
-
+    if (!command) command = client.commands.get(client.aliases.get(cmd))
     if (command)
-        command.run(client, message, args,prefix,errorNull,errorPermissions,tags,errorBotPermissions)
+        command.run(client, message, args,prefix)
 })
-
-client.login(config.token)
-
-module.exports = tags
+let config = require('./config.json');
+client.login(config.token);

@@ -1,71 +1,64 @@
-const {MessageEmbed} = require("discord.js")
+const Discord = require("discord.js")
+
+function getUserFromMention(mention) {
+    if (!mention) return;
+
+    if (mention.startsWith('<@') && mention.endsWith('>')) {
+        mention = mention.slice(2, -1);
+
+        if (mention.startsWith('!')) {
+            mention = mention.slice(1);
+        }
+
+        return client.users.cache.get(mention);
+    }
+}
 
 module.exports = {
     name: "kick",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    run: async(client,message,args) => {
+        if(!message.member.hasPermission("KICK_MEMBERS")) {
+            const embed = new Discord.MessageEmbed()
+                .setTitle("You don't have permissions!")
+                .setDescription("You do not have permissions to kick users")
+                .setTimestamp()
+                .setColor("DARK_RED")
+                .setFooter("CherryBot 2021")
+            return message.reply(embed)
+        }
         const member = message.mentions.members.first()
-
-        if (!message.member.hasPermission("KICK_MEMBERS"))
-            return message.reply(errorPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
-                .catch(err => console.log(err))
-
-        if (!message.guild.me.hasPermission("KICK_MEMBERS"))
-            return message.reply(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
-                .catch(err => console.log(err))
-
-        if(!member)
-            return message.reply(errorNull("kick", "<member>"))
-                .catch(err => console.log(err))
-
-        if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
-            const embed = new MessageEmbed()
-                .setTitle("Nie posiadasz permisji!")
-                .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyrzucić")
-                .setColor("RED")
-
+        if(!member) {
+            const embed = new Discord.MessageEmbed()
+                .setTitle("Specify the user!")
+                .setDescription("Mention any user in the message")
+                .setTimestamp()
+                .setColor("DARK_RED")
+                .setFooter("CherryBot 2021")
             return message.reply(embed)
-                .catch(err => console.log(err))
         }
-
-        if(member.hasPermission("ADMINISTRATOR")) {
-            const embed = new MessageEmbed()
-                .setTitle("Nie posiadasz permisji!")
-                .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
-                .setColor("RED")
-
-            return message.reply(embed)
-                .catch(err => console.log(err))
-        }
-
         if(!member.kickable) {
-            const embed = new MessageEmbed()
-                .setTitle("Nie posiadam permisji!")
-                .setDescription("Użytkownik jest niemożliwy do wyrzucenia")
-                .setColor("RED")
-
+            const embed = new Discord.MessageEmbed()
+                .setTitle("User cannot be kicked out!")
+                .setDescription("I do not have the permissions to kick out this user")
+                .setTimestamp()
+                .setColor("DARK_RED")
+                .setFooter("CherryBot 2021")
             return message.reply(embed)
-                .catch(err => console.log(err))
         }
-
-        member.kick(args.slice(1).join(" ")  || "Brak")
-            .catch(err => console.log(err))
-
-        const embed = new MessageEmbed()
-            .setColor("DARK_PURPLE")
-            .setTitle("Gotowe!")
-            .setDescription("Użytkownik został wyrzucony")
-            .addFields(
-                {
-                    name: "Powód",
-                    value: args.slice(1).join(" ")  || "Brak"
-                },
-                {
-                    name: "Użytkownik",
-                    value: member
-                }
-            )
-
+        const reason = args.slice(1).join(" ") || "nothing"
+        member.kick()
+        const embed = new Discord.MessageEmbed()
+            .setTitle("User has been successfully kicked out")
+            .addFields({
+                name: "Reason",
+                value: reason
+            },{
+                name: "User",
+                value: member
+            })
+            .setTimestamp()
+            .setColor("DARK_RED")
+            .setFooter("CherryBot 2021")
         message.reply(embed)
-            .catch(err => console.log(err))
     }
 }
