@@ -34,7 +34,12 @@ module.exports = {
                 .catch(err => console.log(err))
         }
 
-        db.push(`${member.guild.id}_${member.id}_warns`,args.slice(1).join(" ")  || "brak")
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: message.id,
+            name: "warn",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: message.author.tag
+        })
 
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
@@ -48,10 +53,6 @@ module.exports = {
                 {
                     name: "Użytkownik",
                     value: member
-                },
-                {
-                    name: "Ilość",
-                    value: db.get(`${member.guild.id}_${member.id}_warns`).length
                 }
             )
 

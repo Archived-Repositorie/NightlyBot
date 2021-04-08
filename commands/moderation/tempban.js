@@ -1,4 +1,5 @@
 const {MessageEmbed} = require("discord.js")
+const db = require("quick.db")
 
 const sleep = t => new Promise(r => setTimeout(r, t))
 
@@ -83,10 +84,18 @@ module.exports = {
         if (!number || !time[timeType] || !timeType || !timeParsed)
             return message.reply(errorNull("tempban", "<member> <time+timeType(second/minute/hour)>"))
 
+
         member.ban({
             reason: args.slice(2).join(" ")  || "Brak"
         })
             .catch(err => console.log(err))
+
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: message.id,
+            name: "tempban",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: message.author.tag
+        })
 
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
@@ -107,10 +116,19 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        const msg = await message.reply(embed)
+            .catch(err => console.log(err))
 
         await sleep(timeParsed * 1000)
 
-        message.guild.members.unban(member, "Unbanned by bot").catch(err => console.log(err))
+        message.guild.members.unban(member, "Unbanned by bot")
+            .catch(err => console.log(err))
+
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: msg.id,
+            name: "auto unban",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: client.user.tag
+        })
     }
 }

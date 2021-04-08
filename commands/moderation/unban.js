@@ -1,4 +1,5 @@
 const {MessageEmbed} = require("discord.js")
+const db = require("quick.db")
 
 module.exports = {
     name: "unban",
@@ -46,8 +47,13 @@ module.exports = {
 
         message.reply(embed)
             .catch(err => console.log(err))
-
         message.guild.members.unban(member.user.id,args.slice(1).join(" ")  || "Brak")
             .catch(err => console.log(err))
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: message.id,
+            name: "unban",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: message.author.tag
+        })
     }
 }

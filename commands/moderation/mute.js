@@ -111,5 +111,12 @@ module.exports = {
 
         message.reply(embed)
             .catch(err => console.log(err))
+
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: message.id,
+            name: "mute",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: message.author.tag
+        })
     }
 }

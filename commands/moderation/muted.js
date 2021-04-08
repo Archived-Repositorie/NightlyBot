@@ -81,7 +81,6 @@ module.exports = {
                     channel.updateOverwrite(role, { SEND_MESSAGES: false })
                         .catch(err => console.log(err))
                 })
-                    .catch(err => console.log(err))
 
                 const embed1 = new MessageEmbed()
                     .setColor("DARK_PURPLE")

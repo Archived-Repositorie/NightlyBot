@@ -1,3 +1,4 @@
+const db = require("quick.db");
 const {MessageEmbed} = require("discord.js")
 
 module.exports = {
@@ -67,5 +68,12 @@ module.exports = {
 
         message.reply(embed)
             .catch(err => console.log(err))
+
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: message.id,
+            name: "kick",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: message.author.tag
+        })
     }
 }

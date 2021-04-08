@@ -148,12 +148,26 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        const msg = await message.reply(embed)
             .catch(err => console.log(err))
+
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: message.id,
+            name: "tempmute",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: message.author.tag
+        })
 
         await sleep(timeParsed * 1000)
 
         member.roles.remove(role)
             .catch(err => console.log(err))
+
+        db.push(`${member.guild.id}_${member.id}_punish`,{
+            id: msg.id,
+            name: "auto unmute",
+            reason: args.slice(1).join(" ")  || "Brak",
+            author: client.user.tag
+        })
     }
 }
