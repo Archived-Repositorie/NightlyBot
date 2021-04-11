@@ -117,7 +117,8 @@ client.on("message", async message => {
     let command = client.commands.get(cmd)
 
     if (!command)
-        command = client.commands.get(client.aliases.get(cmd))
+        command = client.commands.get(client.aliases.get(cmd)) ?? {requirePermissions: [,]}
+
 
     if(!command.requirePermissions)
         command.requirePermissions = [,]
@@ -132,7 +133,7 @@ client.on("message", async message => {
             return message.reply(errorBotPermissions(command.requirePermissions[1]))
                 .catch(err => console.log(err))
 
-    if (command)
+    if (command.name)
         command.run(client, message, args,prefix,errorNull,errorPermissions,tags,errorBotPermissions)
 })
 
