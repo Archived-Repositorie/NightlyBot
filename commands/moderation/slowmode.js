@@ -12,7 +12,8 @@ function timee(d) {
 }
 module.exports = {
     name: "slowmode",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["MANAGE_CHANNELS","MANAGE_CHANNELS"],
+    run: async(client,message,args,pr,errorNull) => {
             const time = {
                 "s": 1,
                 "sec": 1,
@@ -25,14 +26,6 @@ module.exports = {
                 "hour": 3600
             }
             const channel = message.mentions.channels.first() || message.channel
-
-            if (!message.member.hasPermission("MANAGE_CHANNELS"))
-                return message.reply(errorPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
-                    .catch(err => console.log(err))
-
-            if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
-                return message.reply(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
-                    .catch(err => console.log(err))
 
             if (!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
                 return message.reply(errorNull("slowmode", "<disable/enable>"))

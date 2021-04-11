@@ -2,15 +2,12 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "clear",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["MANAGE_MESSAGES","MANAGE_MESSAGES"],
+    run: async(client,message,args,pr,errorNull) => {
         const number = args[0]*1
 
-        if (!message.member.hasPermission("MANAGE_MESSAGES"))
-            return message.reply(errorPermissions("ZARZĄDZANIE WIADOMOŚCIAMI", "MANAGE_MESSAGES"))
-                .catch(err => console.log(err))
-
         if(!number || number < 0 || number > 101)
-            return message.reply(errorNull("delwarn", "<number ↑1 ↓100>"))
+            return message.reply(errorNull("clear", "<number ↑1 ↓100>"))
                 .catch(err => console.log(err))
 
         message.channel.bulkDelete(number, true)

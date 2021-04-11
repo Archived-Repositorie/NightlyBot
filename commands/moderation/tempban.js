@@ -18,7 +18,8 @@ function timee(d) {
 
 module.exports = {
     name: "tempban",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["BAN_MEMBERS","BAN_MEMBERS"],
+    run: async(client,message,args,pr,errorNull) => {
         const member = message.mentions.members.first()
 
         const time = {
@@ -32,15 +33,6 @@ module.exports = {
             "hr": 3600,
             "hour": 3600
         }
-
-
-        if (!message.member.hasPermission("BAN_MEMBERS"))
-            return message.reply(errorPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
-                .catch(err => console.log(err))
-
-        if (!message.guild.me.hasPermission("BAN_MEMBERS"))
-            return message.reply(errorBotPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
-                .catch(err => console.log(err))
 
         if(!member)
             return message.reply(errorNull("tempban", "<member>"))

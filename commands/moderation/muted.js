@@ -3,18 +3,11 @@ const db = require("quick.db")
 
 module.exports = {
     name: "muted",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["MANAGE_ROLES",["MANAGE_ROLES","MANAGE_CHANNELS"]],
+    run: async(client,message,args,pr,errorNull) => {
         const text = (args[0] || " ").toLowerCase()
 
         let role = message.mentions.roles.first() || message.guild.roles.cache.get(args.slice(0).join(" ")) || ""
-
-        if (!message.member.hasPermission("MANAGE_ROLES"))
-            return message.reply(errorPermissions("ZARZĄDZANIE ROLAMI", "MANAGE_ROLES"))
-                .catch(err => console.log(err))
-
-        if (!message.guild.me.hasPermission(["MANAGE_CHANNELS","MANAGE_ROLES"]))
-            return message.reply(errorBotPermissions("ZARZĄDZANIE KANAŁAMI,ZARZĄDZANIE ROLAMI", "MANAGE_CHANNELS,MANAGE_ROLES"))
-                .catch(err => console.log(err))
 
         switch(text) {
             case "create": //option create

@@ -3,18 +3,11 @@ const db = require("quick.db")
 
 module.exports = {
     name: "unban",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["BAN_MEMBERS","BAN_MEMBERS"],
+    run: async(client,message,args,pr,errorNull) => {
         const memberID = args[0]
         const bans = await message.guild.fetchBans()
         const member = bans.get(memberID)
-
-        if (!message.member.hasPermission("BAN_MEMBERS"))
-            return message.reply(errorPermissions("BANOWANIE UŻYTKOWNIKÓW", "BAN_MEMBERS"))
-                .catch(err => console.log(err))
-
-        if (!message.guild.me.hasPermission("BAN_MEMBERS"))
-            return message.reply(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
-                .catch(err => console.log(err))
 
         if(!memberID)
             return message.reply(errorNull("unban", "<memberID>"))

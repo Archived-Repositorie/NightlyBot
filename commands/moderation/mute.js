@@ -3,7 +3,8 @@ const db = require("quick.db")
 
 module.exports = {
     name: "mute",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["MUTE_MEMBERS",["MANAGE_CHANNELS","MANAGE_ROLES"]],
+    run: async(client,message,args,pr,errorNull) => {
         const member = message.mentions.members.first()
         const obj = {
             muted: {
@@ -14,14 +15,6 @@ module.exports = {
                 check: undefined
             }
         }
-
-        if (!message.member.hasPermission("MUTE_MEMBERS"))
-            return message.reply(errorPermissions("WYCISZANIE UŻYTKOWNIKÓW", "MUTE_MEMBERS"))
-                .catch(err => console.log(err))
-
-        if (!message.guild.me.hasPermission("MANAGE_CHANNELS"))
-            return message.reply(errorBotPermissions("ZARZĄDZANIE KANAŁAMI", "MANAGE_CHANNELS"))
-                .catch(err => console.log(err))
 
         const roleId = db.get(`${message.guild.id}_muted`) || {id: undefined}
         const role = message.guild.roles.cache.get(roleId.id)

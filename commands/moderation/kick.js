@@ -3,16 +3,9 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "kick",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["KICK_MEMBERS","KICK_MEMBERS"],
+    run: async(client,message,args,pr,errorNull) => {
         const member = message.mentions.members.first()
-
-        if (!message.member.hasPermission("KICK_MEMBERS"))
-            return message.reply(errorPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
-                .catch(err => console.log(err))
-
-        if (!message.guild.me.hasPermission("KICK_MEMBERS"))
-            return message.reply(errorBotPermissions("WYRZUCANIE UŻYTKOWNIKÓW", "KICK_MEMBERS"))
-                .catch(err => console.log(err))
 
         if(!member)
             return message.reply(errorNull("kick", "<member>"))

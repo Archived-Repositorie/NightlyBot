@@ -17,13 +17,10 @@ db.unpush = unpush
 
 module.exports = {
     name: "deluserlog",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["ADMINISTRATOR"],
+    run: async(client,message,args,pr,errorNull) => {
         const member = message.mentions.members.first()
         const number = args[1] * 1
-
-        if (!message.member.hasPermission("ADMINISTRATOR"))
-            return message.reply(errorPermissions("DMINISTRATOR", "DMINISTRATOR"))
-                .catch(err => console.log(err))
 
         if(!member)
             return message.reply(errorNull("deluserlog", "<id>"))

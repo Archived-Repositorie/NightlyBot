@@ -48,10 +48,10 @@ for (const file of eventFiles) {
 
 
 
-const errorPermissions = function (polish,english) {
+const errorPermissions = function (text) {
     const embed = new MessageEmbed()
         .setTitle("Nie posiadasz permisji!")
-        .setDescription(`Aby użyć komendy musisz posiadać permisje \`${polish}(${english})\``)
+        .setDescription(`Aby użyć komendy musisz posiadać permisje \`${text}\``)
         .setColor("RED")
 
     return embed
@@ -64,10 +64,10 @@ const errorNull = function (command,arguments) {
 
     return embed
 }
-const errorBotPermissions = function (polish,english) {
+const errorBotPermissions = function (text) {
     const embed = new MessageEmbed()
         .setTitle("Nie posiadam permisji!")
-        .setDescription(`Aby użyć komendy musę posiadać permisje \`${polish}(${english})\``)
+        .setDescription(`Aby użyć komendy muszę posiadać permisje \`${text}\``)
         .setColor("RED")
 
     return embed
@@ -118,6 +118,19 @@ client.on("message", async message => {
 
     if (!command)
         command = client.commands.get(client.aliases.get(cmd))
+
+    if(!command.requirePermissions)
+        command.requirePermissions = [,]
+
+    if(command.requirePermissions[0])
+        if (!message.member.hasPermission(command.requirePermissions[0]))
+            return message.reply(errorPermissions(command.requirePermissions[0]))
+                .catch(err => console.log(err))
+
+    if(command.requirePermissions[1])
+        if (!message.guild.me.hasPermission(command.requirePermissions[1]))
+            return message.reply(errorBotPermissions(command.requirePermissions[1]))
+                .catch(err => console.log(err))
 
     if (command)
         command.run(client, message, args,prefix,errorNull,errorPermissions,tags,errorBotPermissions)

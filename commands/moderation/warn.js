@@ -3,12 +3,9 @@ const db = require("quick.db")
 
 module.exports = {
     name: "warn",
-    run: async(client,message,args,pr,errorNull,errorPermissions,a,errorBotPermissions) => {
+    requirePermissions: ["VIEW_AUDIT_LOG"],
+    run: async(client,message,args,pr,errorNull) => {
         const member = message.mentions.members.first()
-
-        if (!message.member.hasPermission("VIEW_AUDIT_LOG"))
-            return message.reply(errorPermissions("WYŚWIETLANIE DZIENNIKA ZDARZEŃ", "VIEW_AUDIT_LOG"))
-                .catch(err => console.log(err))
 
         if(!member)
             return message.reply(errorNull("warn", "<member>"))
