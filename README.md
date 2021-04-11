@@ -19,4 +19,4 @@
 ![Linux](https://github.com/lorencerri/quick.db/issues/125#issuecomment-461834038)\
 ![Windows](https://stackoverflow.com/a/64445225)\
 10.Install other packages using `npm i` command\
-11.Run bot using `node .` or `node index.js` command\
+11.Run bot using `node .` or `node index.js` command
