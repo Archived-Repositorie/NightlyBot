@@ -12,11 +12,11 @@
 ![Windows](https://www.zdnet.com/article/windows-10-tip-the-fastest-smartest-ways-to-open-a-command-prompt/)\
 5.Go to folder where u want download bot using `cd <path>`, if u dont know how to use cd check ![this](https://www.groovypost.com/howto/open-command-window-terminal-window-specific-folder-windows-mac-linux/)\
 6.Use in terminal command `git clone https://github.com/JustFoxx/NightlyBot/`\
-7.Use command `cd NightlyBot` to change path in terminal
+7.Use command `cd NightlyBot` to change path in terminal\
 8.Open file config.json and set your token, if u dont know how to use json check ![this](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/JSON)\
-9.Now install first quick.db using
+9.Now install first quick.db using\
 ![MacOS](https://www.npmjs.com/package/quick.db#installation)\
-![Linux](https://github.com/lorencerri/quick.db/issues/125#issuecomment-461834038)
-![Windows](https://stackoverflow.com/a/64445225)
-10.Install other packages using `npm i` command
-11.Run bot using `node .` or `node index.js` command
+![Linux](https://github.com/lorencerri/quick.db/issues/125#issuecomment-461834038)\
+![Windows](https://stackoverflow.com/a/64445225)\
+10.Install other packages using `npm i` command\
+11.Run bot using `node .` or `node index.js` command\
