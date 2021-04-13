@@ -2,7 +2,7 @@ const { posts } = require("rule34js")
 const {MessageEmbed} = require("discord.js")
 module.exports = {
     name: "rule34",
-    run: async(client,message,args,prefix,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         if(!message.channel.nsfw) {
             const embed = new MessageEmbed()
                 .setTitle("🔞 Only NSFW Channel 🔞")

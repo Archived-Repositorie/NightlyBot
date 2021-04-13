@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "prefix",
     requirePermissions: ["MANAGE_GUILD"],
-    run: async(client,message,args,per,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const prefix = args[0]
 
         if(!prefix)

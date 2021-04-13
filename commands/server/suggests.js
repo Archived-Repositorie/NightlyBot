@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "suggests",
     requirePermissions: ["MANAGE_GUILD"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
 
         if(!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
             return message.reply(errorNull("suggests", "<disable/enable>"))

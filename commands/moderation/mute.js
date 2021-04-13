@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "mute",
     requirePermissions: ["MUTE_MEMBERS",["MANAGE_CHANNELS","MANAGE_ROLES"]],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const member = message.mentions.members.first()
         const obj = {
             muted: {

@@ -2,7 +2,7 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "help",
-    run: async(client,message,args,prefix) => {
+    run: async(client,message,args) => {
         function styled(string) {
             return "```\n" + string.split(" ").join("\n") + "```"
         }

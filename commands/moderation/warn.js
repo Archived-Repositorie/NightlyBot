@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "warn",
     requirePermissions: ["VIEW_AUDIT_LOG"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const member = message.mentions.members.first()
 
         if(!member)

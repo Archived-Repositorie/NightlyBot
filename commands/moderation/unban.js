@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "unban",
     requirePermissions: ["BAN_MEMBERS","BAN_MEMBERS"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const memberID = args[0]
         const bans = await message.guild.fetchBans()
         const member = bans.get(memberID)

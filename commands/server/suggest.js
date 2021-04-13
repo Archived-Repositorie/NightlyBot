@@ -3,7 +3,7 @@ const db = require("quick.db")
 
 module.exports = {
     name: "suggest",
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const switched = db.get(`${message.guild.id}_switch_suggests`)
 
         if (switched != 1) {

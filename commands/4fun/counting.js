@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "counting",
     requirePermissions: ["MANAGE_GUILD"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const channel = message.mentions.channels.first()
 
         if(!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))

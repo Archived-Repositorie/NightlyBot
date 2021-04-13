@@ -5,7 +5,7 @@ const procces = require("process")
 
 module.exports = {
     name: "eval",
-    run: async(client,message,args,prefix,errorNull,errorPermissions,tags) => {
+    run: async(client,message,args,errorNull,tags) => {
         if(message.author.id !== "537360299456462852")
             return;
 

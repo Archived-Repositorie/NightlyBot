@@ -3,7 +3,7 @@ const {MessageEmbed} = require("discord.js")
 module.exports = {
     name: "clear",
     requirePermissions: ["MANAGE_MESSAGES","MANAGE_MESSAGES"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const number = args[0]*1
 
         if(!number || number < 0 || number > 101)

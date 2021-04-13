@@ -13,7 +13,7 @@ function timee(d) {
 module.exports = {
     name: "slowmode",
     requirePermissions: ["MANAGE_CHANNELS","MANAGE_CHANNELS"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
             const time = {
                 "s": 1,
                 "sec": 1,

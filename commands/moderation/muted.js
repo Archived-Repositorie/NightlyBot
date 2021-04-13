@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "muted",
     requirePermissions: ["MANAGE_ROLES",["MANAGE_ROLES","MANAGE_CHANNELS"]],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const text = (args[0] || " ").toLowerCase()
 
         let role = message.mentions.roles.first() || message.guild.roles.cache.get(args.slice(0).join(" ")) || ""

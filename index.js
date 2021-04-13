@@ -123,18 +123,16 @@ client.on("message", async message => {
     if(!command.requirePermissions)
         command.requirePermissions = [,]
 
-    if(command.requirePermissions[0])
-        if (!message.member.hasPermission(command.requirePermissions[0]))
-            return message.reply(errorPermissions(command.requirePermissions[0]))
-                .catch(err => console.log(err))
+    if (command.requirePermissions[0] && !message.member.hasPermission(command.requirePermissions[0]))
+        return message.reply(errorPermissions(command.requirePermissions[0]))
+            .catch(err => console.log(err))
 
-    if(command.requirePermissions[1])
-        if (!message.guild.me.hasPermission(command.requirePermissions[1]))
-            return message.reply(errorBotPermissions(command.requirePermissions[1]))
-                .catch(err => console.log(err))
+    if(command.requirePermissions[1] && !message.guild.me.hasPermission(command.requirePermissions[1]))
+        return message.reply(errorBotPermissions(command.requirePermissions[1]))
+            .catch(err => console.log(err))
 
     if (command.name)
-        command.run(client, message, args,prefix,errorNull,errorPermissions,tags,errorBotPermissions)
+        command.run(client, message, args,errorNull,tags)
 })
 
 client.login(config.token)

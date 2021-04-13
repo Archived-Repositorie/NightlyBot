@@ -4,7 +4,7 @@ const {MessageEmbed} = require("discord.js")
 module.exports = {
     name: "kick",
     requirePermissions: ["KICK_MEMBERS","KICK_MEMBERS"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const member = message.mentions.members.first()
 
         if(!member)

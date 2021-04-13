@@ -18,7 +18,7 @@ db.unpush = unpush
 module.exports = {
     name: "deluserlog",
     requirePermissions: ["ADMINISTRATOR"],
-    run: async(client,message,args,pr,errorNull) => {
+    run: async(client,message,args,errorNull) => {
         const member = message.mentions.members.first()
         const number = args[1] * 1
 
