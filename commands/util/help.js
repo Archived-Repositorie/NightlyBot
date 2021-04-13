@@ -14,7 +14,7 @@ module.exports = {
             .addFields(
                 {
                     name: "Util",
-                    value: styled("help invite tags vote"),
+                    value: styled("help invite tags"),
                     inline: true
                 },
                 {
@@ -24,7 +24,7 @@ module.exports = {
                 },
                 {
                     name: "Mod",
-                    value: styled("slowmode muted mute tempmute warn warns delwarn ban unban tempban kick"),
+                    value: styled("slowmode muted mute tempmute warn ban unban tempban kick userlogs deluserlog"),
                     inline: true
                 },
                 {

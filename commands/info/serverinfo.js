@@ -27,7 +27,7 @@ module.exports = {
                 },
                 {
                     name: "Kanały",
-                    value: `Tekstowe ${guild.channels.cache.filter(channel => channel.type != "voice" && channel.type != "category").size} \n Głosowe ${guild.channels.cache.filter(channel => channel.type == "voice" && channel.type != "category").size}`,
+                    value: `Tekstowe ${guild.channels.cache.filter(channel => channel.type == "text").size} \n Głosowe ${guild.channels.cache.filter(channel => channel.type == "voice").size}\n Kategorie ${guild.channels.cache.filter(channel => channel.type == "category").size} \n Nowości ${guild.channels.cache.filter(channel => channel.type == "news").size} \n Sklep ${guild.channels.cache.filter(channel => channel.type == "store").size} \n Inne ${guild.channels.cache.filter(channel => channel.type == "unknow").size}`,
                     inline: true
                 },
                 {
