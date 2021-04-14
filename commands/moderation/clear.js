@@ -3,14 +3,14 @@ const {MessageEmbed} = require("discord.js")
 module.exports = {
     name: "clear",
     requirePermissions: ["MANAGE_MESSAGES","MANAGE_MESSAGES"],
-    run: async(client,message,args,errorNull) => {
-        const number = args[0]*1
+    run: async(ctx) => {
+        const number = ctx.args[0]*1
 
         if(!number || number < 0 || number > 101)
-            return message.reply(errorNull("clear", "<number ↑1 ↓100>"))
+            return ctx.message.reply(ctx.errorNull("clear", "<number ↑1 ↓100>"))
                 .catch(err => console.log(err))
 
-        message.channel.bulkDelete(number, true)
+        ctx.message.channel.bulkDelete(number, true)
             .catch(err => console.log(err))
 
         const embed = new MessageEmbed()
@@ -24,7 +24,7 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

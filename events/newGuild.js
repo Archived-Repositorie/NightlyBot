@@ -1,8 +1,8 @@
 module.exports = {
     name: "guildCreate",
-    async execute(client) {
+    async execute(ctx) {
         console.log(` Dodano bota na nowy serwer!\n`,
-            `Serwery: ${client.guilds.cache.size}\n`,
-            `Użytkownicy: ${client.users.cache.size}`)
+            `Serwery: ${ctx.client.guilds.cache.size}\n`,
+            `Użytkownicy: ${ctx.client.users.cache.size}`)
     }
 }

@@ -2,7 +2,7 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "channelinfo",
-    run: async(client,message,args) => {
+    run: async(ctx) => {
         const obj = {
             true: "Tak",
             false: "Nie",
@@ -10,8 +10,7 @@ module.exports = {
         const justText = {
             name: "brak"
         }
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-        const channel = message.mentions.channels.first() || message.channel
+        const channel = ctx.message.mentions.channels.first() || ctx.message.channel
         const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setDescription(channel)
@@ -38,13 +37,13 @@ module.exports = {
                 },
                 {
                     name: "Data stworzenia",
-                    value: channel.createdAt.toLocaleDateString("pl-PL",options),
+                    value: channel.createdAt.toLocaleDateString("pl-PL",ctx.options),
                     inline: true
                 }
             )
             .setColor("DARK_PURPLE")
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

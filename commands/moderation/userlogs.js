@@ -1,26 +1,17 @@
 const {MessageEmbed} = require("discord.js")
 const db = require("quick.db")
 
-function paginate(arr, size) {
-    return arr.reduce((acc, val, i) => {
-        let idx = Math.floor(i / size)
-        let page = acc[idx] || (acc[idx] = [])
-        page.push(val)
-        return acc
-    }, [])
-}
-
 module.exports = {
     name: "userlogs",
-    run: async(client,message,args) => {
-        const member = message.mentions.members.first() || message.member
-        let number = args.slice(1).join(" ") * 1
+    run: async(ctx) => {
+        const member = ctx.message.mentions.members.first() || ctx.message.member
+        let number = ctx.args.slice(1).join(" ") * 1
 
         if(!number)
             number = 0
 
         const warns = db.get(`${member.guild.id}_${member.id}_punish`) || []
-        let numberPage = paginate(warns,5)
+        let numberPage = ctx.paginate(warns,5)
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
             .setTitle(`Lista zdarzeń #${number}`)
@@ -28,7 +19,7 @@ module.exports = {
             .setDescription(member)
 
         try {
-            for (var i = 0; i < numberPage[number].length; i++) {
+            for (let i = 0; i < numberPage[number].length; i++) {
                 const x = i + (5 * number)
                 const punish = numberPage[number][i]
 
@@ -39,7 +30,7 @@ module.exports = {
             err
         }
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

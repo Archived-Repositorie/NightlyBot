@@ -3,50 +3,31 @@ const config = require("./config.json")
 const db = require("quick.db")
 const fs = require('fs')
 
-const sleep = t => new Promise(r => setTimeout(r, t))
 const client = new Client()
+
+//START
+//FUNCTIONS AND VARIABLES
+
+const sleep = t => new Promise(r => setTimeout(r, t))
+
 const options = {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
-    day: 'numeric' }
-
-client.commands = new Collection()
-client.aliases = new Collection()
-client.categories = fs.readdirSync("./commands/")
-
-const eventFiles = fs.readdirSync('./events')
-    .filter(file => file.endsWith('.js'));
-
-["command"].forEach(handler => {
-    fs.readdirSync("./commands/").forEach(dir => {
-        const commands = fs.readdirSync(`./commands/${dir}/`)
-            .filter(file => file.endsWith(".js"))
-
-        for (let file of commands) {
-            let pull = require(`./commands/${dir}/${file}`)
-
-            client.commands.set(pull.name, pull)
-
-            if (pull.aliases && Array.isArray(pull.aliases))
-                pull.aliases.forEach(alias => client.aliases.set(alias, pull.name))
-        }
-    })
-})
-
-for (const file of eventFiles) {
-    const event = require(`./events/${file}`)
-
-    if (!event.once) {
-        client.on(event.name, async (...args) => await event.execute(...args, client))
-
-    } else {
-        client.once(event.name, async (...args) =>  await event.execute(...args, client))
-    }
-
+    day: 'numeric'
 }
 
+function time(d) {
+    d = Number(d);
+    var h = Math.floor(d / 3600);
+    var m = Math.floor(d % 3600 / 60);
+    var s = Math.floor(d % 3600 % 60);
 
+    var hDisplay = h > 0 ? h + (h == 1 ? " godzine" : " godzin") : "";
+    var mDisplay = m > 0 ? m + (m == 1 ? " minute" : " minut") : "";
+    var sDisplay = s > 0 ? s + (s == 1 ? " sekunde" : " sekund") : "";
+    return hDisplay + mDisplay + sDisplay;
+}
 
 const errorPermissions = function (text) {
     const embed = new MessageEmbed()
@@ -56,6 +37,7 @@ const errorPermissions = function (text) {
 
     return embed
 }
+
 const errorNull = function (command,arguments) {
     const embed = new MessageEmbed()
         .setTitle("Użyj poprawnie komendy!")
@@ -64,6 +46,7 @@ const errorNull = function (command,arguments) {
 
     return embed
 }
+
 const errorBotPermissions = function (text) {
     const embed = new MessageEmbed()
         .setTitle("Nie posiadam permisji!")
@@ -91,6 +74,101 @@ function tags(text,member) {
         .split("#member.avatar#").join(member.user.displayAvatarURL())
 }
 
+function paginate(arr, size) {
+    return arr.reduce((acc, val, i) => {
+        let idx = Math.floor(i / size)
+        let page = acc[idx] || (acc[idx] = [])
+        page.push(val)
+        return acc
+    }, [])
+}
+
+function random(filename){
+    const data = fs.readFileSync(`./random/${filename}.txt`, "utf8");
+    const lines = data.split('\n');
+    return lines[Math.floor(Math.random()*lines.length)];
+}
+
+const timee = {
+    "s": 1,
+    "sec": 1,
+    "second": 1,
+    "m": 60,
+    "min": 60,
+    "minute": 60,
+    "h": 3600,
+    "hr": 3600,
+    "hour": 3600
+}
+
+//CLASS
+//FUNCTIONS AND VARIABLES
+
+class ctx {
+    constructor(message,args,prefix) {
+        this.client = client
+        this.message = message
+        this.args = args
+        this.prefix = prefix
+        this.tags = tags
+        this.options = options
+        this.sleep = sleep
+        this.time = time
+        this.errorNull = errorNull
+        this.paginate = paginate
+        this.timeTest = timee
+        this.random = random
+    }
+}
+
+//END
+//FUNCTIONS AND VARIABLES
+
+
+
+//START
+//COMMAND AND EVENT HANDLER
+
+client.commands = new Collection()
+client.aliases = new Collection()
+client.categories = fs.readdirSync("./commands/")
+
+//EVENT
+//COMMAND AND EVENT HANDLER
+
+const eventFiles = fs.readdirSync('./events')
+    .filter(file => file.endsWith('.js'));
+
+
+for(const file of eventFiles) {
+    const event = require(`./events/${file}`)
+
+    if (!event.once) {
+        client.on(event.name, async (...args) => await event.execute(...args, new ctx))
+    } else {
+        client.once(event.name, async (...args) =>  await event.execute(...args, new ctx))
+    }
+
+}
+
+//COMMAND
+//COMMAND AND EVENT HANDLER
+
+["command"].forEach(handler => {
+    fs.readdirSync("./commands/").forEach(dir => {
+        const commands = fs.readdirSync(`./commands/${dir}/`)
+            .filter(file => file.endsWith(".js"))
+
+        for (let file of commands) {
+            const pull = require(`./commands/${dir}/${file}`)
+
+            client.commands.set(pull.name, pull)
+
+            if (pull.aliases && Array.isArray(pull.aliases))
+                pull.aliases.forEach(alias => client.aliases.set(alias, pull.name))
+        }
+    })
+})
 
 client.on("message", async message => {
     if(!message.guild)
@@ -132,8 +210,11 @@ client.on("message", async message => {
             .catch(err => console.log(err))
 
     if (command.name)
-        command.run(client, message, args,errorNull,tags)
+        command.run(new ctx(message,args,prefix))
 })
+
+//END
+//COMMAND AND EVENT HANDLER
 
 client.login(config.token)
 

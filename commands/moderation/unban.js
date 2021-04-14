@@ -4,13 +4,13 @@ const db = require("quick.db")
 module.exports = {
     name: "unban",
     requirePermissions: ["BAN_MEMBERS","BAN_MEMBERS"],
-    run: async(client,message,args,errorNull) => {
-        const memberID = args[0]
-        const bans = await message.guild.fetchBans()
+    run: async(ctx) => {
+        const memberID = ctx.args[0]
+        const bans = await ctx.message.guild.fetchBans()
         const member = bans.get(memberID)
 
         if(!memberID)
-            return message.reply(errorNull("unban", "<memberID>"))
+            return ctx.message.reply(ctx.errorNull("unban", "<memberID>"))
                 .catch(err => console.log(err))
 
         if(bans.size < 1 || !member) {
@@ -19,7 +19,7 @@ module.exports = {
                 .setDescription("Użytkownik nie jest zablokowany lub nie podałes poprawnego ID")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -30,7 +30,7 @@ module.exports = {
             .addFields(
                 {
                     name: "Powód",
-                    value: args.slice(1).join(" ")  || "Brak"
+                    value: ctx.args.slice(1).join(" ")  || "Brak"
                 },
                 {
                     name: "Użytkownik",
@@ -38,15 +38,17 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
-        message.guild.members.unban(member.user.id,args.slice(1).join(" ")  || "Brak")
+
+        ctx.message.guild.members.unban(member.user.id,ctx.args.slice(1).join(" ")  || "Brak")
             .catch(err => console.log(err))
+
         db.push(`${member.guild.id}_${member.id}_punish`,{
-            id: message.id,
+            id: ctx.message.id,
             name: "unban",
-            reason: args.slice(1).join(" ")  || "Brak",
-            author: message.author.tag
+            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            author: ctx.message.author.tag
         })
     }
 }

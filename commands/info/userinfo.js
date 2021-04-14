@@ -2,9 +2,8 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "userinfo",
-    run: async(client,message,args) => {
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-        const member = message.mentions.members.first() || message.member
+    run: async(ctx) => {
+        const member = ctx.message.mentions.members.first() || ctx.message.member
         let bot = ""
 
         if(member.user.bot)
@@ -23,12 +22,12 @@ module.exports = {
                 },
                 {
                     name: "Data wejścia na serwer",
-                    value: member.joinedAt.toLocaleDateString("pl-PL",options),
+                    value: member.joinedAt.toLocaleDateString("pl-PL",ctx.options),
                     inline: true
                 },
                 {
                     name: "Data stworzenia",
-                    value: member.user.createdAt.toLocaleDateString("pl-PL",options),
+                    value: member.user.createdAt.toLocaleDateString("pl-PL",ctx.options),
                     inline: true
                 },
                 {
@@ -39,7 +38,7 @@ module.exports = {
             )
             .setColor("DARK_PURPLE")
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

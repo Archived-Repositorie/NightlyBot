@@ -4,8 +4,8 @@ const db = require("quick.db")
 module.exports = {
     name: "mute",
     requirePermissions: ["MUTE_MEMBERS",["MANAGE_CHANNELS","MANAGE_ROLES"]],
-    run: async(client,message,args,errorNull) => {
-        const member = message.mentions.members.first()
+    run: async(ctx) => {
+        const member = ctx.message.mentions.members.first()
         const obj = {
             muted: {
                 time: {
@@ -16,8 +16,8 @@ module.exports = {
             }
         }
 
-        const roleId = db.get(`${message.guild.id}_muted`) || {id: undefined}
-        const role = message.guild.roles.cache.get(roleId.id)
+        const roleId = db.get(`${ctx.message.guild.id}_muted`) || {id: undefined}
+        const role = ctx.message.guild.roles.cache.get(roleId.id)
 
         if(!role) {
             const embed = new MessageEmbed()
@@ -25,22 +25,22 @@ module.exports = {
                 .setDescription("Aby stworzyć role użyj komendy `muted create` lub `muted set-role`")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
-        if(role.position >= message.guild.me.roles.cache.first().size) {
+        if(role.position >= ctx.message.guild.me.roles.cache.first().size) {
             const embed = new MessageEmbed()
                 .setTitle("Rola nie można nadać!")
                 .setDescription("Role którą chcesz wyciszyć jest na tej samej pozycji co moja lub większa")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
         if(!member)
-            return message.reply(errorNull("mute", "<member>"))
+            return ctx.message.reply(ctx.errorNull("mute", "<member>"))
 
         const mutedMember = { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
 
@@ -50,17 +50,17 @@ module.exports = {
                 .setDescription("Odcisz użytkownika aby nadać znowu wyciszenie")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
-        if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
+        if(member.roles.cache.first().position >= ctx.message.member.roles.cache.first().position) {
             const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyciszyć")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -70,7 +70,7 @@ module.exports = {
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -94,7 +94,7 @@ module.exports = {
             .addFields(
                 {
                     name: "Powód",
-                    value: args.slice(1).join(" ")  || "Brak"
+                    value: ctx.args.slice(1).join(" ")  || "Brak"
                 },
                 {
                     name: "Użytkownik",
@@ -102,14 +102,14 @@ module.exports = {
                 }
                 )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
 
         db.push(`${member.guild.id}_${member.id}_punish`,{
-            id: message.id,
+            id: ctx.message.id,
             name: "mute",
-            reason: args.slice(1).join(" ")  || "Brak",
-            author: message.author.tag
+            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            author: ctx.message.author.tag
         })
     }
 }

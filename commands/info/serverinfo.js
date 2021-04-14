@@ -2,9 +2,8 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "serverinfo",
-    run: async(client,message,args) => {
-        const guild = message.guild
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+    run: async(ctx) => {
+        const guild = ctx.message.guild
         const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setAuthor(guild.name)
@@ -47,12 +46,12 @@ module.exports = {
                 },
                 {
                     name: "Data stworzenia",
-                    value: guild.createdAt.toLocaleDateString("pl-PL",options),
+                    value: guild.createdAt.toLocaleDateString("pl-PL",ctx.options),
                     inline: true
                 }
             )
             .setColor("DARK_PURPLE")
-        message.reply(embed)
+        ctx.message.reply(embed)
 
             .catch(err => console.log(err))
     }

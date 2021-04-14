@@ -2,7 +2,7 @@ const db = require('quick.db')
 
 module.exports = {
     name: "channelCreate",
-    async execute(channel,client) {
+    async execute(channel,ctx) {
         if(!channel.guild)
             return;
 

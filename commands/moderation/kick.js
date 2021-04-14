@@ -4,20 +4,20 @@ const {MessageEmbed} = require("discord.js")
 module.exports = {
     name: "kick",
     requirePermissions: ["KICK_MEMBERS","KICK_MEMBERS"],
-    run: async(client,message,args,errorNull) => {
-        const member = message.mentions.members.first()
+    run: async(ctx) => {
+        const member = ctx.message.mentions.members.first()
 
         if(!member)
-            return message.reply(errorNull("kick", "<member>"))
+            return ctx.message.reply(ctx.errorNull("kick", "<member>"))
                 .catch(err => console.log(err))
 
-        if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
+        if(member.roles.cache.first().position >= ctx.message.member.roles.cache.first().position) {
             const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyrzucić")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -27,7 +27,7 @@ module.exports = {
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -37,11 +37,11 @@ module.exports = {
                 .setDescription("Użytkownik jest niemożliwy do wyrzucenia")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
-        member.kick(args.slice(1).join(" ")  || "Brak")
+        member.kick(ctx.args.slice(1).join(" ")  || "Brak")
             .catch(err => console.log(err))
 
         const embed = new MessageEmbed()
@@ -51,7 +51,7 @@ module.exports = {
             .addFields(
                 {
                     name: "Powód",
-                    value: args.slice(1).join(" ")  || "Brak"
+                    value: ctx.args.slice(1).join(" ")  || "Brak"
                 },
                 {
                     name: "Użytkownik",
@@ -59,14 +59,14 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
 
         db.push(`${member.guild.id}_${member.id}_punish`,{
-            id: message.id,
+            id: ctx.message.id,
             name: "kick",
-            reason: args.slice(1).join(" ")  || "Brak",
-            author: message.author.tag
+            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            author: ctx.message.author.tag
         })
     }
 }

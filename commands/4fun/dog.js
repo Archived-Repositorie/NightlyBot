@@ -3,7 +3,7 @@ const fetch = require('node-fetch')
 
 module.exports = {
     name: "dog",
-    run: async(client,message,args) => {
+    run: async(ctx) => {
         const image = await fetch("https://dog.ceo/api/breeds/image/random").then(response => response.json())
             .catch(err => console.log(err))
         const embed = new MessageEmbed()
@@ -12,7 +12,7 @@ module.exports = {
             .setTitle("Piesek")
             .setURL(image.message)
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

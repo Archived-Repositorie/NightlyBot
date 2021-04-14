@@ -2,13 +2,12 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "roleinfo",
-    run: async(client,message,args) => {
+    run: async(ctx) => {
         const obj = {
             true: "Tak",
             false: "Nie",
         }
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-        const role = message.mentions.roles.first() || message.guild.roles.cache.get(args.slice(0).join(" ")) || message.member.roles.cache.first()
+        const role = ctx.message.mentions.roles.first() || ctx.message.guild.roles.cache.get(ctx.args.slice(0).join(" ")) || ctx.message.member.roles.cache.first()
         const embed = new MessageEmbed()
             .setTitle("Informacje")
             .setDescription(role)
@@ -35,12 +34,12 @@ module.exports = {
                 },
                 {
                     name: "Data stworzenia",
-                    value: role.createdAt.toLocaleDateString("pl-PL",options),
+                    value: role.createdAt.toLocaleDateString("pl-PL",ctx.options),
                     inline: true
                 },
                 {
                     name: "Pozycja",
-                    value: `${role.position}/${message.guild.roles.cache.size}`,
+                    value: `${role.position}/${ctx.message.guild.roles.cache.size}`,
                     inline: true
                 },
                 {
@@ -51,7 +50,7 @@ module.exports = {
             )
             .setColor("DARK_PURPLE")
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

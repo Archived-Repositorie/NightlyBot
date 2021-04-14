@@ -4,27 +4,27 @@ const db = require("quick.db")
 module.exports = {
     name: "muted",
     requirePermissions: ["MANAGE_ROLES",["MANAGE_ROLES","MANAGE_CHANNELS"]],
-    run: async(client,message,args,errorNull) => {
-        const text = (args[0] || " ").toLowerCase()
+    run: async(ctx) => {
+        const text = (ctx.args[0] || " ").toLowerCase()
 
-        let role = message.mentions.roles.first() || message.guild.roles.cache.get(args.slice(0).join(" ")) || ""
+        let role = ctx.message.mentions.roles.first() || ctx.message.guild.roles.cache.get(ctx.args.slice(0).join(" ")) || ""
 
         switch(text) {
             case "create": //option create
 
-                role = db.get(`${message.guild.id}_muted`) || {id: undefined}
+                role = db.get(`${ctx.message.guild.id}_muted`) || {id: undefined}
 
-                if(message.guild.roles.cache.get(role.id)) {
+                if(ctx.message.guild.roles.cache.get(role.id)) {
                     const embed = new MessageEmbed()
                         .setTitle("Taka rola już istnieje!")
                         .setDescription("Jeśli rola nie blokuje wysyłania wiadomość wpisz komende `muted reload-role` lub zmniejsz permisje użytkownika")
                         .setColor("RED")
 
-                    return message.reply(embed)
+                    return ctx.message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
-                role = await message.guild.roles.create(
+                role = await ctx.message.guild.roles.create(
                     {
                         data:
                             {
@@ -36,13 +36,12 @@ module.exports = {
                     )
                     .catch(err => console.log(err))
 
-                message.guild.channels.cache.forEach(channel => {
+                ctx.message.guild.channels.cache.forEach(channel => {
                     channel.updateOverwrite(role, { SEND_MESSAGES: false })
                         .catch(err => console.log(err))
                 })
-                    .catch(err => console.log(err))
 
-                db.set(`${message.guild.id}_muted`, {
+                db.set(`${ctx.message.guild.id}_muted`, {
                     id: role.id
                 })
 
@@ -51,14 +50,14 @@ module.exports = {
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została stworzona!`)
 
-                message.reply(embed)
+                ctx.message.reply(embed)
                     .catch(err => console.log(err))
 
                 break;
             case "reload-role": //option reload-role
 
-                role = db.get(`${message.guild.id}_muted`) || {id: undefined}
-                role = message.guild.roles.cache.get(role.id)
+                role = db.get(`${ctx.message.guild.id}_muted`) || {id: undefined}
+                role = ctx.message.guild.roles.cache.get(role.id)
 
                 if(!role) {
                     const embed = new MessageEmbed()
@@ -66,11 +65,11 @@ module.exports = {
                         .setDescription("Aby stworzyć role użyj komendy `muted create` lub `muted set-role`")
                         .setColor("RED")
 
-                    return message.reply(embed)
+                    return ctx.message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
-                message.guild.channels.cache.forEach(channel => {
+                ctx.message.guild.channels.cache.forEach(channel => {
                     channel.updateOverwrite(role, { SEND_MESSAGES: false })
                         .catch(err => console.log(err))
                 })
@@ -80,36 +79,36 @@ module.exports = {
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została zaktualizowana!`)
 
-                message.reply(embed1)
+                ctx.message.reply(embed1)
                     .catch(err => console.log(err))
 
                 break;
             case "set-role": //option set-role
                 if(!role)
-                    return message.reply(errorNull("muted", "set-role <role>"))
+                    return ctx.message.reply(ctx.errorNull("muted", "set-role <role>"))
                         .catch(err => console.log(err))
 
-                if(role.position >= message.member.roles.cache.first.position) {
+                if(role.position >= ctx.message.member.roles.cache.first.position) {
                     const embed = new MessageEmbed()
                         .setTitle("Rola nie może zostać ustawiona!")
                         .setDescription("Role którą chcesz ustawić jest na tej samej pozycji co twoja lub większa")
                         .setColor("RED")
 
-                    return message.reply(embed)
+                    return ctx.message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
-                if(role.position >= message.member.roles.cache.first.position) {
+                if(role.position >= ctx.message.member.roles.cache.first.position) {
                     const embed = new MessageEmbed()
                         .setTitle("Rola nie może zostać ustawiona!")
                         .setDescription("Role którą chcesz ustawić jest na tej samej pozycji co moja lub większa")
                         .setColor("RED")
 
-                    return message.reply(embed)
+                    return ctx.message.reply(embed)
                         .catch(err => console.log(err))
                 }
 
-                db.set(`${message.guild.id}_muted`, {
+                db.set(`${ctx.message.guild.id}_muted`, {
                     id: role.id
                 })
 
@@ -118,13 +117,13 @@ module.exports = {
                     .setTitle("Gotowe!")
                     .setDescription(`Rola ${role} została ustawiona!`)
 
-                message.reply(embed2)
+                ctx.message.reply(embed2)
                     .catch(err => console.log(err))
 
                 break;
             default:
 
-                message.reply(errorNull("muted", "<set-role/create/reload-role>"))
+                ctx.message.reply(ctx.errorNull("muted", "<set-role/create/reload-role>"))
                     .catch(err => console.log(err))
         }
     }

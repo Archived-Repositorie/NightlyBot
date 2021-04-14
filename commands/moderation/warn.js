@@ -4,20 +4,20 @@ const db = require("quick.db")
 module.exports = {
     name: "warn",
     requirePermissions: ["VIEW_AUDIT_LOG"],
-    run: async(client,message,args,errorNull) => {
-        const member = message.mentions.members.first()
+    run: async(ctx) => {
+        const member = ctx.message.mentions.members.first()
 
         if(!member)
-            return message.reply(errorNull("warn", "<member>"))
+            return ctx.message.reply(ctx.errorNull("warn", "<member>"))
                 .catch(err => console.log(err))
 
-        if(member.roles.cache.first().position >= message.member.roles.cache.first().position) {
+        if(member.roles.cache.first().position >= ctx.message.member.roles.cache.first().position) {
             const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
                 .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz ostrzegać")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -27,15 +27,15 @@ module.exports = {
                 .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
         db.push(`${member.guild.id}_${member.id}_punish`,{
-            id: message.id,
+            id: ctx.message.id,
             name: "warn",
-            reason: args.slice(1).join(" ")  || "Brak",
-            author: message.author.tag
+            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            author: ctx.message.author.tag
         })
 
         const embed = new MessageEmbed()
@@ -45,7 +45,7 @@ module.exports = {
             .addFields(
                 {
                     name: "Powód",
-                    value: args.slice(1).join(" ")  || "Brak"
+                    value: ctx.args.slice(1).join(" ")  || "Brak"
                 },
                 {
                     name: "Użytkownik",
@@ -53,7 +53,7 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

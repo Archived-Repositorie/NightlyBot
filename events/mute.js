@@ -2,7 +2,7 @@ const db = require("quick.db")
 
 module.exports = {
     name: "guildMemberAdd",
-    async execute(member,client) {
+    async execute(member,ctx) {
         const obj = {
             muted: {
                 time: {

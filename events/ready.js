@@ -1,12 +1,12 @@
 module.exports = {
     name: "ready",
     once: true,
-    execute(client) {
-        console.log(` Zalogowano jako ${client.user.tag}\n`,
-            `Serwery: ${client.guilds.cache.size}\n`,
-            `Użytkownicy: ${client.users.cache.size}`)
+    execute(ctx) {
+        console.log(` Zalogowano jako ${ctx.client.user.tag}\n`,
+            `Serwery: ${ctx.client.guilds.cache.size}\n`,
+            `Użytkownicy: ${ctx.client.users.cache.size}`)
 
-        client.user.setStatus("idle")
+        ctx.client.user.setStatus("idle")
             .catch(err => console.log(err))
     }
 }

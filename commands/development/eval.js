@@ -5,18 +5,18 @@ const procces = require("process")
 
 module.exports = {
     name: "eval",
-    run: async(client,message,args,errorNull,tags) => {
-        if(message.author.id !== "537360299456462852")
+    run: async(ctx) => {
+        if(ctx.message.author.id !== "537360299456462852")
             return;
 
         try {
-            const returned = eval(args.join(" "))
+            const returned = eval(ctx.args.join(" "))
 
-            message.reply("```" + returned + "```")
+            ctx.message.reply("```" + returned + "```")
                 .catch(err => console.log(err))
 
         } catch (err) {
-            message.reply("```" + err + "```")
+            ctx.message.reply("```" + err + "```")
                 .catch(err => console.log(err))
         }
     }

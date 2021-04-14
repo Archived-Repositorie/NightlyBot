@@ -7,7 +7,6 @@ function delArray(arr, value) {
     })
 }
 
-
 function unpush(thing = 0,base) {
     let things = db.get(base)
     console.log(delArray(things, thing))
@@ -18,16 +17,16 @@ db.unpush = unpush
 module.exports = {
     name: "deluserlog",
     requirePermissions: ["ADMINISTRATOR"],
-    run: async(client,message,args,errorNull) => {
-        const member = message.mentions.members.first()
-        const number = args[1] * 1
+    run: async(ctx) => {
+        const member = ctx.message.mentions.members.first()
+        const number = ctx.args[1] * 1
 
         if(!member)
-            return message.reply(errorNull("deluserlog", "<id>"))
+            return ctx.message.reply(ctx.errorNull("deluserlog", "<id>"))
                 .catch(err => console.log(err))
 
         if(number != 0 && !number)
-            return message.reply(errorNull("deluserlog", "<member> <id>"))
+            return ctx.message.reply(ctx.errorNull("deluserlog", "<member> <id>"))
                 .catch(err => console.log(err))
 
         const warns = db.get(`${member.guild.id}_${member.id}_punish`) || []
@@ -37,7 +36,7 @@ module.exports = {
                 .setTitle("Użytkownik nie posiada zdarzeń!")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -45,7 +44,7 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setTitle("Takie ostrzeżenie nie istnieje!")
                 .setColor("RED")
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -66,7 +65,7 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

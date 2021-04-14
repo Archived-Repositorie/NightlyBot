@@ -4,46 +4,46 @@ const db = require("quick.db")
 module.exports = {
     name: "joinmsg",
     requirePermissions: ["MANAGE_GUILD"],
-    run: async(client,message,args,errorNull,tags) => {
+    run: async(ctx) => {
 
-        if(!((args[0] || " ").toLowerCase() == "disable" || (args[0] || " ").toLowerCase() == "enable"))
-            return message.reply(errorNull("joinmsg", "<disable/enable>"))
+        if(!((ctx.args[0] || " ").toLowerCase() == "disable" || (ctx.args[0] || " ").toLowerCase() == "enable"))
+            return ctx.message.reply(ctx.errorNull("joinmsg", "<disable/enable>"))
                 .catch(err => console.log(err))
 
-        const channel = message.mentions.channels.first()
+        const channel = ctx.message.mentions.channels.first()
 
-        if((args[0] || " ").toLowerCase() == "disable") {
-            db.set(`${message.guild.id}_switch_join`,0)
+        if((ctx.args[0] || " ").toLowerCase() == "disable") {
+            db.set(`${ctx.message.guild.id}_switch_join`,0)
 
             const embed = new MessageEmbed()
                 .setTitle("Wyłączono wiadomość o wejściu na serwer!")
                 .setColor("DARK_PURPLE")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
         if(!channel)
-            return message.reply(errorNull("joinmsg", "enable <channel>"))
+            return ctx.message.reply(ctx.errorNull("joinmsg", "enable <channel>"))
 
-        const text = args.slice(2).join(" ")
+        const text = ctx.args.slice(2).join(" ")
 
         if(!text)
-            return message.reply(errorNull("joinmsg", `enable #${channel.name} <text>`))
+            return ctx.message.reply(ctx.errorNull("joinmsg", `enable #${channel.name} <text>`))
 
-        db.set(`${message.guild.id}_join`, {
+        db.set(`${ctx.message.guild.id}_join`, {
             text: text,
             id: channel.id
         })
 
         const embed = new MessageEmbed()
             .setTitle("Gotowe!")
-            .setDescription(tags(text,message.member))
+            .setDescription(ctx.tags(text,ctx.message.member))
             .setColor("DARK_PURPLE")
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
 
-        db.set(`${message.guild.id}_switch_join`,1)
+        db.set(`${ctx.message.guild.id}_switch_join`,1)
     }
 }

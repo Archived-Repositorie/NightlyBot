@@ -4,13 +4,13 @@ const nsfw = new NSFW()
 
 module.exports = {
     name: "ass",
-    run: async(client,message,args) => {
-        if(!message.channel.nsfw) {
+    run: async(ctx) => {
+        if(!ctx.message.channel.nsfw) {
             const embed = new MessageEmbed()
                 .setTitle("🔞 Only NSFW Channel 🔞")
                 .setColor("RED")
 
-            return message.reply(embed)
+            return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
@@ -21,7 +21,7 @@ module.exports = {
             .setTitle("Ass")
             .setURL(image.url)
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

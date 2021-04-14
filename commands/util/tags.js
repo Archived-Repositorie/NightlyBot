@@ -2,10 +2,11 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "tags",
-    run: async(client,message,args) => {
+    run: async(ctx) => {
         function styled(string) {
             return "```\n" + string.split(" ").join("\n") + "```"
         }
+
         const embed = new MessageEmbed()
             .setTitle("Lista CMD tagów")
             .setColor("DARK_PURPLE")
@@ -22,7 +23,7 @@ module.exports = {
                 }
             )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }

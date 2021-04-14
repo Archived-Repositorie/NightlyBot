@@ -3,7 +3,7 @@ const tags = require("../index")
 
 module.exports = {
     name: "guildMemberRemove",
-    async execute(member,client) {
+    async execute(member,ctx) {
         const switched = db.get(`${member.guild.id}_switch_leave`)
 
         if (switched != 1)

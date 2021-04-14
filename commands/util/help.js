@@ -2,7 +2,7 @@ const {MessageEmbed} = require("discord.js")
 
 module.exports = {
     name: "help",
-    run: async(client,message,args) => {
+    run: async(ctx) => {
         function styled(string) {
             return "```\n" + string.split(" ").join("\n") + "```"
         }
@@ -10,7 +10,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setTitle("Lista komend")
             .setColor("DARK_PURPLE")
-            .setThumbnail(client.user.avatarURL())
+            .setThumbnail(ctx.client.user.avatarURL())
             .addFields(
                 {
                     name: "Util",
@@ -39,7 +39,7 @@ module.exports = {
                 }
             )
 
-        if(message.channel.nsfw)
+        if(ctx.message.channel.nsfw)
             embed
                 .addFields(
                     {
@@ -49,7 +49,7 @@ module.exports = {
                     }
                     )
 
-        message.reply(embed)
+        ctx.message.reply(embed)
             .catch(err => console.log(err))
     }
 }
