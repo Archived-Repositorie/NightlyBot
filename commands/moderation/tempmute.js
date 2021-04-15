@@ -43,9 +43,8 @@ module.exports = {
             return ctx.message.reply(ctx.errorNull("tempmute", "<member>"))
                 .catch(err => console.log(err))
 
-        const mutedMember = { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
-
-        if(mutedMember.check) {
+        const { muted }= db.get(`${member.guild.id}_${member.id}_mute`) || obj
+        if(muted.check) {
             const embed = new MessageEmbed()
                 .setTitle("Użytkownik jest już wyciszony!")
                 .setDescription("Odcisz użytkownika aby nadać znowu wyciszenie")
@@ -122,11 +121,13 @@ module.exports = {
         db.push(`${member.guild.id}_${member.id}_punish`,{
             id: ctx.message.id,
             name: "tempmute",
-            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            reason: ctx.args.slice(2).join(" ")  || "Brak",
             author: ctx.message.author.tag
         })
 
         await ctx.sleep(timeParsed * 1000)
+
+        db.delete(`${member.guild.id}_${member.id}_mute`)
 
         member.roles.remove(role)
             .catch(err => console.log(err))
@@ -134,7 +135,7 @@ module.exports = {
         db.push(`${member.guild.id}_${member.id}_punish`,{
             id: msg.id,
             name: "auto unmute",
-            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            reason: "Odciszony przez bota",
             author: ctx.client.user.tag
         })
     }

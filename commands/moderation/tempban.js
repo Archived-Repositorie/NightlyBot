@@ -58,7 +58,7 @@ module.exports = {
         db.push(`${member.guild.id}_${member.id}_punish`,{
             id: ctx.message.id,
             name: "tempban",
-            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            reason: ctx.args.slice(2).join(" ")  || "Brak",
             author: ctx.message.author.tag
         })
 
@@ -92,7 +92,7 @@ module.exports = {
         db.push(`${member.guild.id}_${member.id}_punish`,{
             id: msg.id,
             name: "auto unban",
-            reason: ctx.args.slice(1).join(" ")  || "Brak",
+            reason: "Odblokowany przez bota",
             author: ctx.client.user.tag
         })
     }

@@ -10,7 +10,7 @@ module.exports = {
             return;
 
         const joined = db.get(`${member.guild.id}_join`)
-        const text = tags(joined.text, member)
+        const text = ctx.tags(joined.text, member)
 
         member.guild.channels.cache.get(joined.id).send(text)
             .catch(err => console.log(err))

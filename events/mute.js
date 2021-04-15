@@ -34,15 +34,18 @@ module.exports = {
         const timeDiffInSecond = Math.ceil(timeDiff / 1000) //zamienia w sekundy
         const allOfTime = muted.time.sec - timeDiffInSecond //oblicza ile musi trwać jeszcze mute, muted.time.sec(czas trwania mute) - timeDiffInSecound(czas w którym użytwkonika nie było na serwerze + czas mute przed wyjście)
 
-        if(!allOfTime || allOfTime <= 0)
+        if(!allOfTime || allOfTime <= 0) {
+            db.delete(`${member.guild.id}_${member.id}_mute`)
             return member.roles.remove(role)
                 .catch(err => console.log(err))
+        }
 
         member.roles.add(role)
             .catch(err => console.log(err))
 
         await sleep(allOfTime * 1000)
 
+        db.delete(`${member.guild.id}_${member.id}_mute`)
         member.roles.remove(role)
             .catch(err => console.log(err))
     }

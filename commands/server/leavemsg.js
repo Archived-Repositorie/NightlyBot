@@ -40,7 +40,7 @@ module.exports = {
 
             const embed = new MessageEmbed()
                 .setTitle("Gotowe!")
-                .setDescription(tags(text, message.member))
+                .setDescription(ctx.tags(text, ctx.message.member))
                 .setColor("DARK_PURPLE")
 
             ctx.message.reply(embed)

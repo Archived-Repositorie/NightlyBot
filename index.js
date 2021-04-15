@@ -64,7 +64,7 @@ function tags(text,member) {
         .split("#guild.icon#").join(member.guild.iconURL() || "")
         .split("#guild.createdAt#").join(member.guild.createdAt.toLocaleDateString("pl-PL",options))
         //member
-        .split("#member.name#").join(member.user.name)
+        .split("#member.name#").join(member.user.username)
         .split("#member.mention#").join(member)
         .split("#member.tag#").join(member.user.tag)
         .split("#member.id#").join(member.user.id)

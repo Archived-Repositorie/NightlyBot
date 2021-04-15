@@ -1,8 +1,8 @@
-const {MessageEmbed} = require("discord.js")
+const { MessageEmbed } = require("discord.js")
 const db = require("quick.db")
 
 module.exports = {
-    name: "mute",
+    name: "unmute",
     requirePermissions: ["MUTE_MEMBERS",["MANAGE_CHANNELS","MANAGE_ROLES"]],
     run: async(ctx) => {
         const member = ctx.message.mentions.members.first()
@@ -29,7 +29,7 @@ module.exports = {
                 .catch(err => console.log(err))
         }
 
-        if(role.position >= ctx.message.guild.me.roles.cache.first().size) {
+        if(role.position >= ctx.message.guild.me.roles.cache.first().position) {
             const embed = new MessageEmbed()
                 .setTitle("Rola nie można nadać!")
                 .setDescription("Role którą chcesz wyciszyć jest na tej samej pozycji co moja lub większa")
@@ -43,10 +43,10 @@ module.exports = {
             return ctx.message.reply(ctx.errorNull("mute", "<member>"))
 
         const { muted } = db.get(`${member.guild.id}_${member.id}_mute`) || obj
-        if(muted.check) {
+        if(!muted.check) {
             const embed = new MessageEmbed()
-                .setTitle("Użytkownik jest już wyciszony!")
-                .setDescription("Odcisz użytkownika aby nadać znowu wyciszenie")
+                .setTitle("Użytkownik nie jest wyciszony!")
+                .setDescription("Wycisz użytkownika aby nadać znowu odciszenie")
                 .setColor("RED")
 
             return ctx.message.reply(embed)
@@ -56,40 +56,22 @@ module.exports = {
         if(member.roles.cache.first().position >= ctx.message.member.roles.cache.first().position) {
             const embed = new MessageEmbed()
                 .setTitle("Nie posiadasz permisji!")
-                .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz wyciszyć")
+                .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz odciszyć")
                 .setColor("RED")
 
             return ctx.message.reply(embed)
                 .catch(err => console.log(err))
         }
 
-        if(member.hasPermission("ADMINISTRATOR")) {
-            const embed = new MessageEmbed()
-                .setTitle("Nie posiadasz permisji!")
-                .setDescription("Użytkownik posiada permisje ADMINISTRATOR(ADMINISTRATOR)")
-                .setColor("RED")
-
-            return ctx.message.reply(embed)
-                .catch(err => console.log(err))
-        }
-
-        member.roles.add(role)
+        member.roles.remove(role)
             .catch(err => console.log(err))
 
-        db.set(`${member.guild.id}_${member.id}_mute`,{
-            muted: {
-                time: {
-                    date: undefined,
-                    sec: undefined
-                },
-                check: true
-            }
-        })
+        db.delete(`${member.guild.id}_${member.id}_mute`)
 
         const embed = new MessageEmbed()
             .setColor("DARK_PURPLE")
             .setTitle("Gotowe!")
-            .setDescription("Użytkownik został wyciszony")
+            .setDescription("Użytkownik został odciszony")
             .addFields(
                 {
                     name: "Powód",
@@ -99,14 +81,14 @@ module.exports = {
                     name: "Użytkownik",
                     value: member
                 }
-                )
+            )
 
         ctx.message.reply(embed)
             .catch(err => console.log(err))
 
         db.push(`${member.guild.id}_${member.id}_punish`,{
             id: ctx.message.id,
-            name: "mute",
+            name: "unmute",
             reason: ctx.args.slice(1).join(" ")  || "Brak",
             author: ctx.message.author.tag
         })
