@@ -3,7 +3,7 @@ const {MessageEmbed} = require("discord.js")
 module.exports = {
     name: "userinfo",
     run: async(ctx) => {
-        const member = ctx.message.mentions.members.first() || ctx.message.member
+        const member = ctx.mention(0) || ctx.message.member
         let bot = ""
 
         if(member.user.bot)

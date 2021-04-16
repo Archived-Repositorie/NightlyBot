@@ -5,7 +5,7 @@ module.exports = {
     name: "unmute",
     requirePermissions: ["MUTE_MEMBERS",["MANAGE_CHANNELS","MANAGE_ROLES"]],
     run: async(ctx) => {
-        const member = ctx.message.mentions.members.first()
+        const member = ctx.mention(0)
         const obj = {
             muted: {
                 time: {

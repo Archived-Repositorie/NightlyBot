@@ -18,7 +18,7 @@ module.exports = {
     name: "deluserlog",
     requirePermissions: ["ADMINISTRATOR"],
     run: async(ctx) => {
-        const member = ctx.message.mentions.members.first()
+        const member = ctx.mention(0)
         const number = ctx.args[1] * 1
 
         if(!member)

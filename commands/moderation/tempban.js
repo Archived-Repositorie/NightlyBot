@@ -5,21 +5,11 @@ module.exports = {
     name: "tempban",
     requirePermissions: ["BAN_MEMBERS","BAN_MEMBERS"],
     run: async(ctx) => {
-        const member = ctx.message.mentions.members.first()
+        const member = ctx.mention(0)
 
         if(!member)
             return ctx.message.reply(ctx.errorNull("tempban", "<member>"))
                 .catch(err => console.log(err))
-
-        if(member.roles.cache.first().position >= ctx.message.member.roles.cache.first().position) {
-            const embed = new MessageEmbed()
-                .setTitle("Nie posiadasz permisji!")
-                .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz zablokować")
-                .setColor("RED")
-
-            return message.reply(embed)
-                .catch(err => console.log(err))
-        }
 
         if(member.hasPermission("ADMINISTRATOR")) {
             const embed = new MessageEmbed()
@@ -28,6 +18,16 @@ module.exports = {
                 .setColor("RED")
 
             return ctx.message.reply(embed)
+                .catch(err => console.log(err))
+        }
+
+        if(member.roles.cache.first().position >= ctx.message.member.roles.cache.first().position) {
+            const embed = new MessageEmbed()
+                .setTitle("Nie posiadasz permisji!")
+                .setDescription("Twoja rola jest zbyt nisko do użytkowna którego chcesz zablokować")
+                .setColor("RED")
+
+            return message.reply(embed)
                 .catch(err => console.log(err))
         }
 

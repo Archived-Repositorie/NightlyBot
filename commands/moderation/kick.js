@@ -5,7 +5,7 @@ module.exports = {
     name: "kick",
     requirePermissions: ["KICK_MEMBERS","KICK_MEMBERS"],
     run: async(ctx) => {
-        const member = ctx.message.mentions.members.first()
+        const member = ctx.mention(0)
 
         if(!member)
             return ctx.message.reply(ctx.errorNull("kick", "<member>"))

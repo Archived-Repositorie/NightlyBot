@@ -4,7 +4,7 @@ const db = require("quick.db")
 module.exports = {
     name: "userlogs",
     run: async(ctx) => {
-        const member = ctx.message.mentions.members.first() || ctx.message.member
+        const member = ctx.mention(0) || ctx.message.member
         let number = ctx.args.slice(1).join(" ") * 1
 
         if(!number)

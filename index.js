@@ -47,6 +47,20 @@ const errorNull = function (command,arguments) {
     return embed
 }
 
+function mention(mention,guild) {
+    if (!mention) return;
+
+    if (mention.startsWith('<@') && mention.endsWith('>')) {
+        mention = mention.slice(2, -1)
+
+        if (mention.startsWith('!'))
+            mention = mention.slice(1)
+
+        return guild.members.cache.get(mention)
+    }
+}
+
+
 const errorBotPermissions = function (text) {
     const embed = new MessageEmbed()
         .setTitle("Nie posiadam permisji!")
@@ -105,7 +119,8 @@ const timee = {
 //FUNCTIONS AND VARIABLES
 
 class ctx {
-    constructor(message,args,prefix) {
+    constructor(message,args,prefix,cmd) {
+        this.cmd = cmd
         this.client = client
         this.message = message
         this.args = args
@@ -118,6 +133,9 @@ class ctx {
         this.paginate = paginate
         this.timeTest = timee
         this.random = random
+    }
+    mention(number) {
+        return mention(this.args[number], this.message.guild)
     }
 }
 
@@ -191,7 +209,6 @@ client.on("message", async message => {
     if (cmd.length === 0)
         return;
 
-    const comm = client.commands.get(cmd)
     let command = client.commands.get(cmd)
 
     if (!command)
@@ -210,12 +227,10 @@ client.on("message", async message => {
             .catch(err => console.log(err))
 
     if (command.name)
-        command.run(new ctx(message,args,prefix))
+        command.run(new ctx(message,args,prefix,command))
 })
 
 //END
 //COMMAND AND EVENT HANDLER
 
 client.login(config.token)
-
-module.exports = tags
