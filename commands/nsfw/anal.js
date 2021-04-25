@@ -4,6 +4,8 @@ const nsfw = new NSFW()
 
 module.exports = {
     name: "anal",
+    description: "NSFW",
+    use: "anal",
     run: async(ctx) => {
         if(!ctx.message.channel.nsfw) {
             const embed = new MessageEmbed()

@@ -150,7 +150,6 @@ class ctx {
 client.commands = new Collection()
 client.aliases = new Collection()
 client.categories = fs.readdirSync("./commands/")
-
 //EVENT
 //COMMAND AND EVENT HANDLER
 
@@ -171,15 +170,14 @@ for(const file of eventFiles) {
 
 //COMMAND
 //COMMAND AND EVENT HANDLER
-
 ["command"].forEach(handler => {
     fs.readdirSync("./commands/").forEach(dir => {
         const commands = fs.readdirSync(`./commands/${dir}/`)
             .filter(file => file.endsWith(".js"))
-
+        client.categories[dir] = []
         for (let file of commands) {
-            const pull = require(`./commands/${dir}/${file}`)
-
+            let pull = require(`./commands/${dir}/${file}`)
+            client.categories[dir].push(pull.name)
             client.commands.set(pull.name, pull)
 
             if (pull.aliases && Array.isArray(pull.aliases))
@@ -227,7 +225,7 @@ client.on("message", async message => {
             .catch(err => console.log(err))
 
     if (command.name)
-        command.run(new ctx(message,args,prefix,command))
+        command.run(new ctx(message,args,prefix,client.commands.toJSON()))
 })
 
 //END

@@ -1,5 +1,4 @@
 const db = require("quick.db")
-const tags = require("../index")
 
 module.exports = {
     name: "guildMemberAdd",
