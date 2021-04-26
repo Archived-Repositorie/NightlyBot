@@ -1,4 +1,3 @@
-const fs = require('fs')
 const {MessageEmbed} = require("discord.js")
 
 

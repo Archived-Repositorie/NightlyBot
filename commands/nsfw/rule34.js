@@ -15,7 +15,7 @@ module.exports = {
         }
 
         if(!ctx.args[0])
-            return ctx.message.reply(ctx.errorNull(this.name, "<text>"))
+            return ctx.message.reply(ctx.errorNull("rule34", "<text>"))
                 .catch(err => console.log(err))
 
         const response = await posts({tags:[ctx.args[0]]})
