@@ -3,7 +3,7 @@ const db = require("quick.db")
 
 module.exports = {
     name: "money",
-    description: "informacje o stanie pieniędzy",
+    description: "Informacje o stanie pieniędzy",
     use: "money [member]",
     run: async(ctx) => {
         const member = ctx.mention(0) || ctx.message.member

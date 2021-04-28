@@ -11,6 +11,7 @@ module.exports = {
             "disable": true,
             "enable": true
         }
+
         if(!switchs[ctx.args[0]])
             return ctx.message.reply(ctx.errorNull("joinmsg", "<disable/enable>"))
                 .catch(err => console.log(err))
