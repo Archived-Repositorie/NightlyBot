@@ -3,7 +3,7 @@ const db = require("quick.db")
 module.exports = {
     name: "guildMemberAdd",
     async execute(member,ctx) {
-        const start = db.get(`${ctx.message.guild.id}_economy.start`)
+        const start = db.get(`${member.guild.id}_economy.start`) || {switch: false}
 
         if (!start.switch)
             return;

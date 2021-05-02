@@ -48,12 +48,12 @@ module.exports = {
                 },
                 {
                     name: "Permisje potrzebne użytkownikowi",
-                    value: ctx.cmd.find(cmd => cmd.name == text).requirePermissions[0],
+                    value: ctx.cmd.find(cmd => cmd.name == text).requirePermissions[0] || "Brak",
                     inline: true
                 },
                 {
                     name: "Permisje potrzebne botowi",
-                    value: ctx.cmd.find(cmd => cmd.name == text).requirePermissions[1],
+                    value: ctx.cmd.find(cmd => cmd.name == text).requirePermissions[1] || "Brak",
                     inline: true
                 },
                 {
