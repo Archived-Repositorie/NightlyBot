@@ -4,12 +4,12 @@ const db = require("quick.db")
 module.exports = {
     name: "setstartmoney",
     description: "Ustawia pieniądze po wejściu użytkownika",
-    use: "setstartmoney <cash/bank> <number>",
+    use: "setstartmoney <enable/disable> <cash/bank> <number>",
     requirePermissions: ["MANAGE_GUILD"],
     run: async(ctx) => {
         const currency = db.get(`${ctx.message.member.guild.id}_economy.currency`) || "💷"
         const number = ctx.args[2] * 1
-        const text = ctx.args[1]||"".toLowerCase()
+        const text = (ctx.args[1]||"").toLowerCase()
         const options = {
             "cash" : "Portfel",
             "bank" : "Bank"
@@ -39,14 +39,14 @@ module.exports = {
                 .catch(err => console.log(err))
 
         if(!number || number <= 0)
-            return ctx.message.reply(ctx.errorNull("setstartmoney","<cash/bank> <number>"))
+            return ctx.message.reply(ctx.errorNull("setstartmoney","enable <cash/bank> <number>"))
                 .catch(err => console.log(err))
 
         db.set(`${ctx.message.guild.id}_economy.start`, { type: options[text], value: number })
         db.set(`${ctx.message.guild.id}_economy.start.switch`,true)
 
         const embed = new MessageEmbed()
-            .setTitle("")
+            .setTitle("Ustawiono pieniądze wejściowe")
             .addFields(
                 {
                     name: "Wartość",

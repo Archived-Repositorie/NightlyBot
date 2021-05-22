@@ -4,13 +4,17 @@ const db = require("quick.db")
 module.exports = {
     name: "money",
     description: "Informacje o stanie pieniędzy",
-    use: "money [member]",
+    use: "money <member>",
     run: async(ctx) => {
-        const member = ctx.mention(0) || ctx.message.member
+        let member = ctx.mention(0) || ctx.message.member
         const cash = db.get(`${member.guild.id}_${member.id}_economy.cash`) || 0
         const bank = db.get(`${member.guild.id}_${member.id}_economy.bank`) || 0
         const currency = db.get(`${member.guild.id}_economy.currency`) || "💷"
         const money = cash + bank
+
+        if(member.user.bot)
+            member = ctx.message.member
+
         const embed = new MessageEmbed()
             .setTitle("Stan pieniędzy")
             .setThumbnail(member.user.avatarURL())
